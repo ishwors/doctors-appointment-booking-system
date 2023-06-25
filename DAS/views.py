@@ -55,6 +55,36 @@ def register(request):
         return redirect('login')
     return render(request,'main/register.html')
 
+def doctor_register(request):
+    if request.method == "POST":
+        fname = request.POST.get('fname')
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        
+        # check username
+        if User.objects.filter(username=username).exists():
+           messages.warning(request,'That username has already been taken!')
+           return redirect('register')
+        
+        # check email
+        if User.objects.filter(email=email).exists():
+           messages.warning(request,'Email already exists!')
+           return redirect('register')
+        
+        user = User(
+            first_name = fname,
+            last_name = "Doctor",
+            username = username,
+            email = email,
+        )
+
+        user.set_password(password)
+        user.save()
+
+        return redirect('login')
+    return render(request,'main/doctor-register.html')
+
 def DO_LOGIN(request):
     if request.method == "POST":
         email = request.POST.get('email')
@@ -64,8 +94,12 @@ def DO_LOGIN(request):
                                      username=email,
                                      password=password)
         if user!=None:
-           login(request,user)
-           return redirect('patient-dashboard')
+           if user.last_name == "Patient":
+                login(request,user)
+                return redirect('patient-dashboard')
+           elif user.last_name == "Doctor":
+                login(request,user)
+                return redirect('doctor-dashboard')
         else:
            messages.error(request,'Email and Password Are Invalid !')
            return redirect('login')
