@@ -1,2 +1,2 @@
 # major-project-ui
-Final year major project | QA
+Final year major project | QA Check 
