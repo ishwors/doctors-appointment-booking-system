@@ -4,8 +4,17 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+from .forms import CustomPasswordChangeForm
 
 from DAS import email_backend
+
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = 'main/change-password.html'
+    success_url = reverse_lazy('patient-dashboard')
+
 
 def index(request):
     return render(request,'main/index.html')

@@ -18,6 +18,7 @@ from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
 from .import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,10 +28,11 @@ urlpatterns = [
     path('login/',views.LOGIN, name='login'),
     path('logout/', views.LOGOUT, name='logout'),
     path('register/',views.register, name='register'),
+    path('doctor-register/',views.doctor_register, name='doctor-register'),
     path('doLogin', views.DO_LOGIN, name='doLogin'),
     path('patient-dashboard/', views.PATIENT_DASHBOARD, name='patient-dashboard'),
     path('profile-settings/', views.PROFILE_SETTINGS, name='profile-settings'),
-    path('doctor-register/',views.doctor_register, name='doctor-register'),
+    path('change-password/', views.CustomPasswordChangeView.as_view(), name='change-password'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
