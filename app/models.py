@@ -9,7 +9,7 @@ from django.dispatch import receiver
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Add your custom fields here
-    profile_pic = models.ImageField(upload_to="media/patient",null=True) #stored in a separate media folder
+    profile_pic = models.ImageField(default='default.png', null=True, blank=True) #stored in a separate media folder
     dob = models.DateField(null=True)
     blood_group = models.CharField(max_length=3,null=True)
     mobile = models.CharField(max_length=15 ,null=True)
@@ -22,7 +22,7 @@ class Patient(models.Model):
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     # Add your custom fields here
-    profile_pic = models.ImageField(upload_to="media/doctor",null=True)
+    profile_pic = models.ImageField(null=True, blank=True)
     mobile = models.CharField(max_length=15,null=True)
     dob = models.DateField(null=True)
     bio = models.TextField(blank=True)
@@ -44,6 +44,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     if instance.last_name == "Patient":
+        if instance.patient.profile_pic == "":
+            instance.patient.profile_pic = "default.png"
         instance.patient.save()
 
     elif instance.last_name == "Doctor":

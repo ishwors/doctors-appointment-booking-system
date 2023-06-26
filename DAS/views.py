@@ -6,7 +6,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
 from DAS import email_backend
-from app.models import Patient
 
 def index(request):
     return render(request,'main/index.html')
@@ -19,6 +18,10 @@ def APPOINTMENTS(request):
 
 def LOGIN(request):
     return render(request,'main/login.html')
+
+def LOGOUT(request):
+    logout(request)
+    return redirect('login')
 
 def register(request):
     if request.method == "POST":
@@ -104,13 +107,13 @@ def DO_LOGIN(request):
            messages.error(request,'Email and Password Are Invalid !')
            return redirect('login')
 
+@login_required(login_url="login")
 def PATIENT_DASHBOARD(request):
     return render(request,'main/patient-dashboard.html')
 
-@login_required(login_url="/main/login/")
 def PROFILE_SETTINGS(request):
     if request.method == "POST":
-        image = request.POST.get('image')
+        image = request.FILES.get('image')
         username = request.POST.get('username')
         fname = request.POST.get('fname')
         email = request.POST.get('email')
