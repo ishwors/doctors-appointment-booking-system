@@ -15,12 +15,22 @@ class CustomPasswordChangeView(PasswordChangeView):
     template_name = 'main/change-password.html'
     success_url = reverse_lazy('patient-dashboard')
 
+class CustomDoctorPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = 'main/doctor-change-password.html'
+    success_url = reverse_lazy('doctor-dashboard')
+
 
 def index(request):
     return render(request,'main/index.html')
 
+@login_required(login_url="login")
 def DOCTOR_DASHBOARD(request):
-    return render(request,'main/doctor-dashboard.html')
+    if request.user.last_name == "Doctor":
+        return render(request,'main/doctor-dashboard.html')
+    
+    return render(request,'main/login.html')
+    
 
 def APPOINTMENTS(request):
     return render(request,'main/appointments.html')
@@ -31,6 +41,12 @@ def LOGIN(request):
 def LOGOUT(request):
     logout(request)
     return redirect('login')
+
+def SEARCH(request):
+    return render(request,'main/search.html')
+
+def DOCTOR_PROFILE(request):
+    return render(request,'main/doctor-profile.html')
 
 def register(request):
     if request.method == "POST":
@@ -118,7 +134,10 @@ def DO_LOGIN(request):
 
 @login_required(login_url="login")
 def PATIENT_DASHBOARD(request):
-    return render(request,'main/patient-dashboard.html')
+    if request.user.last_name == "Patient":
+        return render(request,'main/patient-dashboard.html')
+    
+    return render(request,'main/login.html')
 
 def PROFILE_SETTINGS(request):
     if request.method == "POST":

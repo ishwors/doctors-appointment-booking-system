@@ -30,42 +30,18 @@
                     <a href="#">Doctors <i class="fas fa-chevron-down"></i></a>
                     <ul class="submenu">
                         <li><a href="{% url 'doctor-dashboard' %}">Doctor Dashboard</a></li>
-                        <li><a href="{% url 'appointments' %}">Appointments</a></li>
-                        <li><a href="schedule-timings.html">Schedule Timing</a></li>
-                        <li><a href="my-patients.html">Patients List</a></li>
-                        <li><a href="patient-profile.html">Patients Profile</a></li>
-                        <li><a href="invoices.html">Invoices</a></li>
-                        <li><a href="doctor-profile-settings.html">Profile Settings</a></li>
-                        <li><a href="reviews.html">Reviews</a></li>
+                        <li><a href="{% url 'login' %}">Doctor Login</a></li>
                         <li><a href="{% url 'doctor-register' %}">Doctor Register</a></li>
                     </ul>
                 </li>	
                 <li class="has-submenu">
                     <a href="#">Patients <i class="fas fa-chevron-down"></i></a>
                     <ul class="submenu">
-                        <li><a href="search.html">Search Doctor</a></li>
-                        <li><a href="doctor-profile.html">Doctor Profile</a></li>
-                        <li><a href="booking.html">Booking</a></li>
-                        <li><a href="checkout.html">Checkout</a></li>
-                        <li><a href="booking-success.html">Booking Success</a></li>
                         <li><a href="{% url 'patient-dashboard' %}">Patient Dashboard</a></li>
-                        <li><a href="favourites.html">Favourites</a></li>
-                        <li><a href="{% url 'change-password'%}">Change Password</a></li>
+                        <li><a href="{% url 'login' %}">Patient Login</a></li>
+                        <li><a href="{% url 'register' %}">Patient Register</a></li>
                     </ul>
                 </li>	
-                <li class="has-submenu">
-                    <a href="#">Pages <i class="fas fa-chevron-down"></i></a>
-                    <ul class="submenu">
-                        <li><a href="search.html">Search Doctors</a></li>
-                        <li class="has-submenu">
-                            <a href="invoices.html">Invoices</a>
-                            <ul class="submenu">
-                                <li><a href="invoices.html">Invoices</a></li>
-                                <li><a href="invoice-view.html">Invoice View</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
                 <li>
                     <a href="/admin/" target="_blank">Admin</a>
                 </li>
