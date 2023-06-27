@@ -4,7 +4,7 @@
         <div class="widget-profile pro-widget-content">
             <div class="profile-info-widget">
                 <a href="#" class="booking-doc-img">
-                    <img src="{% static 'client-assets/img/patients/default.png' %}" alt="User Image">
+                    <img src="{{user.patient.profile_pic.url}}" alt="User Image">
                 </a>
                 <div class="profile-det-info">
                     {% if user.is_authenticated and user.first_name == '' %}
@@ -40,13 +40,6 @@
                         <a href="favourites.html">
                             <i class="fas fa-bookmark"></i>
                             <span>Favourites</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="chat.html">
-                            <i class="fas fa-comments"></i>
-                            <span>Message</span>
-                            <small class="unread-msg">23</small>
                         </a>
                     </li>
                     <li>

@@ -139,9 +139,13 @@ def PROFILE_SETTINGS(request):
         user_id = request.user.id
         user = User.objects.get(id=user_id)
         patient = user.patient
-        
+
     # To update existing records
-        patient.profile_pic = image
+        if image is None:
+            patient.profile_pic = patient.profile_pic
+        else:
+            patient.profile_pic = image
+
         patient.dob = dob
         patient.blood_group = blood
         patient.mobile = mobile
