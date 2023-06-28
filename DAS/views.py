@@ -7,6 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import CustomPasswordChangeForm
+from app.models import Doctor, Patient
 
 from DAS import email_backend
 
@@ -43,7 +44,8 @@ def LOGOUT(request):
     return redirect('login')
 
 def SEARCH(request):
-    return render(request,'main/search.html')
+    user = User.objects.filter(last_name = 'Doctor').order_by('id')
+    return render(request, 'main/search.html', {'user': user})
 
 def DOCTOR_PROFILE(request):
     return render(request,'main/doctor-profile.html')
@@ -184,3 +186,52 @@ def PROFILE_SETTINGS(request):
 
         return render(request,'main/profile-settings.html')
     return render(request,'main/profile-settings.html')
+
+def DOCTOR_PROFILE_SETTINGS(request):
+    if request.method == "POST":
+        image = request.POST.get('image')
+        username = request.POST.get('username')
+        fname = request.POST.get('fname')
+        email = request.POST.get('email')
+        specialization = request.POST.get('specialization')
+        dob= request.POST.get('dob')
+        mobile = request.POST.get('mobile')
+        address = request.POST.get('address')
+        bio = request.POST.get('bio')
+        pricing = request.POST.get('pricing')
+        degree = request.POST.get('degree')
+        designation = request.POST.get('designation')
+        experience = request.POST.get('experience')
+        gender= request.POST.get('gender')
+        clinic_name = request.POST.get('clinic_name')
+        clinic_address = request.POST.get('clinic_address')
+
+    # Important code to access user and patient table
+        user_id = request.user.id
+        user = User.objects.get(id=user_id)
+        doctor = user.doctor
+        
+    # To update existing records
+        doctor.profile_pic = image
+        doctor.dob = dob
+        doctor.mobile = mobile
+        doctor.address = address
+        doctor.specialization = specialization
+        doctor.degree = degree
+        doctor.pricing = pricing
+        doctor.bio = bio
+        doctor.designation =  designation 
+        doctor.experience =  experience
+        doctor.gender = gender
+        doctor.clinic_name = clinic_name
+        doctor.clinic_address = clinic_address
+        doctor.save()
+
+        user.first_name = fname
+        user.username = username
+        user.email = email
+            
+        user.save()
+
+        return render(request,'main/doctor-profile-settings.html')
+    return render(request,'main/doctor-profile-settings.html')

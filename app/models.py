@@ -19,10 +19,6 @@ class Patient(models.Model):
     zip_code = models.CharField(max_length=10 ,null=True)
     country = models.CharField(max_length=100 ,null=True)
 
-class Clinic(models.Model):
-    clinic_name = models.CharField(max_length=50)
-    clinic_address = models.CharField(max_length=150)
-
 class Doctor(models.Model):
     GENDER = (
         ('Male', 'Male'),
@@ -31,20 +27,22 @@ class Doctor(models.Model):
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+
     # Add your custom fields here 
     profile_pic = models.ImageField(default='default.png', null=True, blank=True)
     gender = models.CharField(choices=GENDER, max_length=10, null=True)
     mobile = models.CharField(max_length=15, null=True)
     dob = models.DateField(null=True)
     bio = models.TextField(blank=True)
-    clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE, null=True)
+    clinic_name = models.CharField(max_length=50, null=True)
+    clinic_address = models.CharField(max_length=150, null=True)
     specialization = models.CharField(max_length=150 , null=True)
     address = models.CharField(max_length=150, null=True)
     pricing = models.IntegerField(null=True)
     degree = models.CharField(max_length=10, null=True)
     experience = models.CharField(max_length=5, null=True)
     designation = models.CharField(max_length=30, null=True)
-
+    
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
