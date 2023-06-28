@@ -1,2 +1,3 @@
-# major-project-ui
-Final year major project | QA Check 
+# major-project
+
+Here we will prepare our project report/docs.
