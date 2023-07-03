@@ -4,6 +4,20 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+# Gender
+class Gender(models.Model):
+    title = models.CharField(max_length=10, null=True)
+
+    def __str__(self):
+        return self.title
+
+
+# Specialization
+class Specialization(models.Model):
+    title = models.CharField(max_length=20, null=True)
+
+    def __str__(self):
+        return self.title
 
 # Create your models here.
 class Patient(models.Model):
@@ -20,23 +34,16 @@ class Patient(models.Model):
     country = models.CharField(max_length=100 ,null=True)
 
 class Doctor(models.Model):
-    GENDER = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-        ('Others', 'Others')
-    )
-
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-
     # Add your custom fields here 
-    profile_pic = models.ImageField(default='default.png', null=True, blank=True)
-    gender = models.CharField(choices=GENDER, max_length=10, null=True)
+    profile_pic = models.ImageField(default='default.png', null=True, blank=True) #stored in a separate media folder
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True)
+    specialization = models.ForeignKey(Specialization, on_delete=models.CASCADE, null=True)
     mobile = models.CharField(max_length=15, null=True)
     dob = models.DateField(null=True)
     bio = models.TextField(blank=True)
     clinic_name = models.CharField(max_length=50, null=True)
     clinic_address = models.CharField(max_length=150, null=True)
-    specialization = models.CharField(max_length=150 , null=True)
     address = models.CharField(max_length=150, null=True)
     pricing = models.IntegerField(null=True)
     degree = models.CharField(max_length=10, null=True)
@@ -60,6 +67,8 @@ def save_user_profile(sender, instance, **kwargs):
         instance.patient.save()
 
     elif instance.last_name == "Doctor":
+        if instance.doctor.profile_pic == "":
+            instance.doctor.profile_pic = "default.png"
         instance.doctor.save()
 
 

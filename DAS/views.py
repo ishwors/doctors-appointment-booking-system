@@ -1,5 +1,6 @@
 
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -7,7 +8,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import CustomPasswordChangeForm
-from app.models import Doctor, Patient
+from app.models import Doctor, Gender, Patient, Specialization
+from django.template.loader import render_to_string
 
 from DAS import email_backend
 
@@ -45,7 +47,17 @@ def LOGOUT(request):
 
 def SEARCH(request):
     user = User.objects.filter(last_name = 'Doctor').order_by('id')
-    return render(request, 'main/search.html', {'user': user})
+    gender = Gender.objects.all().order_by('id')
+    specialization = Specialization.objects.all().order_by('id')
+
+    context = { 
+        'user':user,    
+        'gender':gender,
+        'specialization':specialization,
+    }
+
+    return render(request, 'main/search.html',context)
+
 
 def DOCTOR_PROFILE(request):
     return render(request,'main/doctor-profile.html')
@@ -189,7 +201,7 @@ def PROFILE_SETTINGS(request):
 
 def DOCTOR_PROFILE_SETTINGS(request):
     if request.method == "POST":
-        image = request.POST.get('image')
+        image = request.FILES.get('image')
         username = request.POST.get('username')
         fname = request.POST.get('fname')
         email = request.POST.get('email')
@@ -212,7 +224,11 @@ def DOCTOR_PROFILE_SETTINGS(request):
         doctor = user.doctor
         
     # To update existing records
-        doctor.profile_pic = image
+        if image is None:
+            doctor.profile_pic = doctor.profile_pic
+        else:
+            doctor.profile_pic = image
+        
         doctor.dob = dob
         doctor.mobile = mobile
         doctor.address = address
@@ -235,3 +251,28 @@ def DOCTOR_PROFILE_SETTINGS(request):
 
         return render(request,'main/doctor-profile-settings.html')
     return render(request,'main/doctor-profile-settings.html')
+
+def BOOKING(request):
+    return render(request,'main/booking.html')
+
+# Filter Data
+def filter_data(request):
+    genders = request.GET.getlist('gender[]')
+    specializations = request.GET.getlist('specialization[]')
+    user = User.objects.filter(last_name='Doctor')
+
+    # Filter based on genders if genders are provided
+    if genders:
+        user = user.filter(doctor__gender__id__in=genders)
+    
+    # Filter based on specializations if specializations are provided
+    if specializations:
+        user = user.filter(doctor__specialization__id__in=specializations)
+
+    # Order the queryset by ID
+    user = user.order_by('id')
+
+    t = render_to_string('ajax/doctor-list.html', {'user': user})
+
+    return JsonResponse({'data': t})
+

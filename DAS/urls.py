@@ -35,8 +35,10 @@ urlpatterns = [
     path('change-password/', views.CustomPasswordChangeView.as_view(), name='change-password'),
     path('doctor-change-password/', views.CustomDoctorPasswordChangeView.as_view(), name='doctor-change-password'),
     path('search/', views.SEARCH, name='search'),
+    path('booking/', views.BOOKING, name='booking'),
     path('doctor-profile/', views.DOCTOR_PROFILE, name='doctor-profile'),
     path('doctor-profile-settings', views.DOCTOR_PROFILE_SETTINGS, name='doctor-profile-settings'),
+    path('filter-data', views.filter_data, name='filter_data'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -7,7 +7,7 @@
 		<meta charset="utf-8">
 		<title>Doccure</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 		<!-- Favicons -->
 		<link href="{% static 'client-assets/img/favicon.png'%}" rel="icon">
 		
@@ -35,7 +35,6 @@
 			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
 			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
 		<![endif]-->
-	
 	</head>
 	<body>
 
@@ -86,96 +85,29 @@
 						<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
 						
 							<!-- Search Filter -->
-							<div class="card search-filter">
-								<div class="card-header">
-									<h4 class="card-title mb-0">Search Filter</h4>
-								</div>
-								<div class="card-body">
-								<div class="filter-widget">
-									<div class="cal-icon">
-										<input type="text" class="form-control datetimepicker" placeholder="Select Date">
-									</div>			
-								</div>
-								<div class="filter-widget">
-									<h4>Gender</h4>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="gender_type" checked>
-											<span class="checkmark"></span> Male Doctor
-										</label>
-									</div>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="gender_type">
-											<span class="checkmark"></span> Female Doctor
-										</label>
-									</div>
-								</div>
-								<div class="filter-widget">
-									<h4>Select Specialist</h4>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="select_specialist" checked>
-											<span class="checkmark"></span> Urology
-										</label>
-									</div>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="select_specialist" checked>
-											<span class="checkmark"></span> Neurology
-										</label>
-									</div>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="select_specialist">
-											<span class="checkmark"></span> Dentist
-										</label>
-									</div>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="select_specialist">
-											<span class="checkmark"></span> Orthopedic
-										</label>
-									</div>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="select_specialist">
-											<span class="checkmark"></span> Cardiologist
-										</label>
-									</div>
-									<div>
-										<label class="custom_check">
-											<input type="checkbox" name="select_specialist">
-											<span class="checkmark"></span> Cardiologist
-										</label>
-									</div>
-								</div>
-									<div class="btn-search">
-										<button type="button" class="btn btn-block">Search</button>
-									</div>	
-								</div>
-							</div>
+							{% include 'components/search-filter.html' %}
 							<!-- /Search Filter -->
 							
 						</div>
 						
-						<div class="col-md-12 col-lg-8 col-xl-9">
+						<div class="col-md-12 col-lg-8 col-xl-9" id="filteredDoctors">
+						<p class="ajaxLoader">Loading....</p>
 
 							<!-- Dynamic Doctor Widget -->
 							{% for i in user %}
 							<div class="card">
 								<div class="card-body">
 									<div class="doctor-widget">
-										<div class="doc-info-left">
+										<div class="doc-info-left d-flex align-items-center " >
 											<div class="doctor-img">
 												<a href="{% url 'doctor-profile' %}">
-													<img src="{{i.profile_pic.url}}" class="img-fluid" alt="User Image">
+													<img src="{{i.doctor.profile_pic.url}}" class="img-fluid" alt="User Image">
 												</a>
 											</div>
 											<div class="doc-info-cont">
 												<h4 class="doc-name"><a href="{% url 'doctor-profile' %}">Dr. {{i.first_name}}</a></h4>
-												<p class="doc-speciality">{{i.doctor.designation}}</p>
-												<h5 class="doc-department"><img src="{{i.doctor.specialization}}" class="img-fluid" alt="Speciality">Dentist</h5>
+												<p class="doc-speciality">{{i.doctor.degree}} - {{i.doctor.designation}}</p>
+												<h5 class="doc-department">{{i.doctor.specialization}}</h5>
 												<div class="rating">
 													<i class="fas fa-star filled"></i>
 													<i class="fas fa-star filled"></i>
@@ -185,11 +117,7 @@
 													<span class="d-inline-block average-rating">(17)</span>
 												</div>
 												<div class="clinic-details">
-													<p class="doc-location"><i class="fas fa-map-marker-alt"></i> Florida, USA</p>
-												</div>
-												<div class="clinic-services">
-													<span>Dental Fillings</span>
-													<span> Whitneing</span>
+													<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{i.doctor.address}}</p>
 												</div>
 											</div>
 										</div>
@@ -198,24 +126,23 @@
 												<ul>
 													<li><i class="far fa-thumbs-up"></i> 98%</li>
 													<li><i class="far fa-comment"></i> 17 Feedback</li>
-													<li><i class="fas fa-map-marker-alt"></i> Florida, USA</li>
-													<li><i class="far fa-money-bill-alt"></i> $300 - $1000 <i class="fas fa-info-circle" data-toggle="tooltip" title="Lorem Ipsum"></i> </li>
+													<li><i class="fas fa-map-marker-alt"></i> {{i.doctor.address}}</li>
+													<li><i class="far fa-money-bill-alt"></i> Rs {{i.doctor.pricing}} </li>
 												</ul>
 											</div>
 											<div class="clinic-booking">
 												<a class="view-pro-btn" href="{% url 'doctor-profile' %}">View Profile</a>
-												<a class="apt-btn" href="">Book Appointment</a>
+												<a class="apt-btn" href="{% url 'booking' %}">Book Appointment</a>
 											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-							<!-- /Doctor Widget -->
 							{% endfor %}
 
-							<div class="load-more text-center">
+							<!-- <div class="load-more text-center">
 								<a class="btn btn-primary btn-sm" href="javascript:void(0);">Load More</a>	
-							</div>	
+							</div>	 -->
 						</div>
 					</div>
 
@@ -225,142 +152,7 @@
 			<!-- /Page Content -->
    
 			<!-- Footer -->
-			<footer class="footer">
-				
-				<!-- Footer Top -->
-				<div class="footer-top">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-about">
-									<div class="footer-logo">
-										<img src="{% static 'client-assets/img/footer-logo.png'%}" alt="logo">
-									</div>
-									<div class="footer-about-content">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-										<div class="social-icon">
-											<ul>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-dribbble"></i> </a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Patients</h2>
-									<ul>
-										<li><a href="search.html"><i class="fas fa-angle-double-right"></i> Search for Doctors</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="booking.html"><i class="fas fa-angle-double-right"></i> Booking</a></li>
-										<li><a href="patient-dashboard.html"><i class="fas fa-angle-double-right"></i> Patient Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Doctors</h2>
-									<ul>
-										<li><a href="appointments.html"><i class="fas fa-angle-double-right"></i> Appointments</a></li>
-										<li><a href="chat.html"><i class="fas fa-angle-double-right"></i> Chat</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="doctor-register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="doctor-dashboard.html"><i class="fas fa-angle-double-right"></i> Doctor Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-contact">
-									<h2 class="footer-title">Contact Us</h2>
-									<div class="footer-contact-info">
-										<div class="footer-address">
-											<span><i class="fas fa-map-marker-alt"></i></span>
-											<p> 3556  Beech Street, San Francisco,<br> California, CA 94108 </p>
-										</div>
-										<p>
-											<i class="fas fa-phone-alt"></i>
-											+1 315 369 5943
-										</p>
-										<p class="mb-0">
-											<i class="fas fa-envelope"></i>
-											doccure@example.com
-										</p>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-						</div>
-					</div>
-				</div>
-				<!-- /Footer Top -->
-				
-				<!-- Footer Bottom -->
-                <div class="footer-bottom">
-					<div class="container-fluid">
-					
-						<!-- Copyright -->
-						<div class="copyright">
-							<div class="row">
-								<div class="col-md-6 col-lg-6">
-									<div class="copyright-text">
-										<p class="mb-0"><a href="templateshub.net">Templates Hub</a></p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-6">
-								
-									<!-- Copyright Menu -->
-									<div class="copyright-menu">
-										<ul class="policy-menu">
-											<li><a href="term-condition.html">Terms and Conditions</a></li>
-											<li><a href="privacy-policy.html">Policy</a></li>
-										</ul>
-									</div>
-									<!-- /Copyright Menu -->
-									
-								</div>
-							</div>
-						</div>
-						<!-- /Copyright -->
-						
-					</div>
-				</div>
-				<!-- /Footer Bottom -->
-				
-			</footer>
+			{% include 'components/footer.html' %}
 			<!-- /Footer -->
 
 		</div>
