@@ -10,6 +10,7 @@ from django.urls import reverse_lazy
 from .forms import CustomPasswordChangeForm
 from app.models import Doctor, Gender, Patient, Specialization
 from django.template.loader import render_to_string
+from django.db.models import Q
 
 from DAS import email_backend
 
@@ -47,6 +48,28 @@ def LOGOUT(request):
 
 def SEARCH(request):
     user = User.objects.filter(last_name = 'Doctor').order_by('id')
+    gender = Gender.objects.all().order_by('id')
+    specialization = Specialization.objects.all().order_by('id')
+
+    context = { 
+        'user':user,    
+        'gender':gender,
+        'specialization':specialization,
+    }
+
+    return render(request, 'main/search.html',context)
+
+def index_search(request):
+    q=request.GET['q']
+    
+    user = User.objects.filter(last_name = 'Doctor')
+    user = user.filter(Q(doctor__address__icontains=q) 
+                       | Q(doctor__clinic_name__icontains=q) 
+                       | Q(doctor__clinic_address__icontains=q) 
+                       | Q(first_name__icontains=q) 
+                       | Q(doctor__gender__title__icontains=q) 
+                       | Q(doctor__specialization__title__icontains=q)) .order_by('id')
+
     gender = Gender.objects.all().order_by('id')
     specialization = Specialization.objects.all().order_by('id')
 

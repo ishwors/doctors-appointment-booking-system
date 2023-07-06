@@ -39,6 +39,7 @@ urlpatterns = [
     path('doctor-profile/', views.DOCTOR_PROFILE, name='doctor-profile'),
     path('doctor-profile-settings', views.DOCTOR_PROFILE_SETTINGS, name='doctor-profile-settings'),
     path('filter-data', views.filter_data, name='filter_data'),
+    path('index-search', views.index_search, name='index-search'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

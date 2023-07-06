@@ -76,6 +76,31 @@
 				</div>
 			</div>
 			<!-- /Breadcrumb -->
+
+			<!-- Home Banner -->
+			<section class="section section-search">
+				<div class="container-fluid">
+					<div class="banner-wrapper">
+						<div class="banner-header text-center">
+							<h1>Search Doctor, Make an Appointment</h1>
+							<p>Discover the best doctors, clinic & hospital the city nearest to you.</p>
+						</div>
+                         
+						<!-- Search -->
+						<div class="search-box d-flex justify-content-center align-items-center">
+							<form action="/index-search">
+								<div class="form-group search-info">
+									<input type="text" class="form-control" placeholder="Search Doctors, Clinics Name, Clinics Address,  Etc" name="q">
+								</div>
+								<button type="submit" class="btn btn-primary search-btn"><i class="fas fa-search"></i> <span>Search</span></button>
+							</form>
+						</div>
+						<!-- /Search -->
+						
+					</div>
+				</div>
+			</section>
+			<!-- /Home Banner -->
 			
 			<!-- Page Content -->
 			<div class="content">
@@ -87,9 +112,9 @@
 							<!-- Search Filter -->
 							{% include 'components/search-filter.html' %}
 							<!-- /Search Filter -->
-							
+
 						</div>
-						
+
 						<div class="col-md-12 col-lg-8 col-xl-9" id="filteredDoctors">
 						<p class="ajaxLoader">Loading....</p>
 
