@@ -40,6 +40,7 @@ urlpatterns = [
     path('doctor-profile-settings', views.DOCTOR_PROFILE_SETTINGS, name='doctor-profile-settings'),
     path('filter-data', views.filter_data, name='filter_data'),
     path('index-search', views.index_search, name='index-search'),
+    path('autocomplete', views.autocomplete, name='autocomplete'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

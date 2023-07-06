@@ -60,7 +60,7 @@ def SEARCH(request):
     return render(request, 'main/search.html',context)
 
 def index_search(request):
-    q=request.GET['q']
+    q=request.GET['search']
     
     user = User.objects.filter(last_name = 'Doctor')
     user = user.filter(Q(doctor__address__icontains=q) 
@@ -81,6 +81,20 @@ def index_search(request):
 
     return render(request, 'main/search.html',context)
 
+def autocomplete(request):
+    if 'term' in request.GET:
+        user = User.objects.filter(last_name = 'Doctor')
+        search_term = request.GET.get('term')
+
+        qs = user.filter( Q(doctor__address__icontains=search_term)
+                       | Q(doctor__clinic_name__icontains=search_term) 
+                       | Q(first_name__icontains=search_term )) 
+        titles = list()
+
+        titles = [f"{user.first_name}, {user.doctor.address}, {user.doctor.clinic_name}" for user in qs]
+        return JsonResponse(titles, safe=False)
+
+    return render(request,'main/search.html')
 
 def DOCTOR_PROFILE(request):
     return render(request,'main/doctor-profile.html')

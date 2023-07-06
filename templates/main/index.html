@@ -50,7 +50,7 @@
 						<div class="search-box d-flex justify-content-center align-items-center">
 							<form action="/index-search">
 								<div class="form-group search-info">
-									<input type="text" class="form-control" placeholder="Search Doctors, Clinics Name, Clinics Address,  Etc" name="q">
+									<input type="text" id="doc" class="form-control" placeholder="Search Doctors, Clinics Name, Clinics Address,  Etc" name="search">
 								</div>
 								<button type="submit" class="btn btn-primary search-btn"><i class="fas fa-search"></i> <span>Search</span></button>
 							</form>
@@ -622,6 +622,21 @@
 		
 		<!-- Custom JS -->
 		<script src="{% static 'client-assets/js/script.js' %}"></script>
+
+		<!-- Search Bar Recommendation -->
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
+		<script>
+			$(function() {
+				$("#doc").autocomplete({
+					source: "{% url 'autocomplete' %}",
+					minLength: 1, // Minimum number of characters before autocomplete starts
+					delay: 300 // Delay in milliseconds before making the request
+				});
+			});
+		</script>
 		
 	</body>
 
