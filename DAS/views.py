@@ -98,8 +98,9 @@ def autocomplete(request):
 
 def DOCTOR_PROFILE(request,slug):
     doctors = Doctor.objects.get(slug=slug)
-    id = doctors.id
+    id = doctors.id  # This id is doctor table's doctor id
     doctor = Doctor.objects.filter(slug = slug)
+
     if doctor.exists():
         doctor = doctor.first()
     else:
@@ -108,11 +109,14 @@ def DOCTOR_PROFILE(request,slug):
     patient_id = request.user.id
 
     review_filter = Review.objects.filter(doctor_id=id)
+
+    # For Patient :
     user = User.objects.filter(last_name = 'Patient').order_by('id')
 
     context = {
         'review': review_filter,
         'user' : user,
+        'doctor' : doctor,
     }
     
     if request.method == 'POST' and patient_id is not None:

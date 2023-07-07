@@ -66,14 +66,14 @@
 					<div class="card">
 						<div class="card-body">
 							<div class="doctor-widget">
-								<div class="doc-info-left">
+								<div class="doc-info-left d-flex align-items-center">
 									<div class="doctor-img">
-										<img src="{% static 'client-assets/img/doctors/doctor-thumb-02.jpg'%}" class="img-fluid" alt="User Image">
+										<img src="{{doctor.profile_pic.url}}" class="img-fluid" alt="User Image">
 									</div>
 									<div class="doc-info-cont">
-										<h4 class="doc-name">Dr. Darren Elder</h4>
-										<p class="doc-speciality">BDS, MDS - Oral & Maxillofacial Surgery</p>
-										<p class="doc-department"><img src="{% static 'client-assets/img/specialities/specialities-05.png'%}" class="img-fluid" alt="Speciality">Dentist</p>
+										<h4 class="doc-name">{{doctor.user.first_name}}</h4>
+										<p class="doc-speciality">{{doctor.degree}} - {{doctor.designation}}</p>
+										<h5 class="doc-department">{{doctor.specialization}}</h5>
 										<div class="rating">
 											<i class="fas fa-star filled"></i>
 											<i class="fas fa-star filled"></i>
@@ -83,58 +83,17 @@
 											<span class="d-inline-block average-rating">(35)</span>
 										</div>
 										<div class="clinic-details">
-											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> Newyork, USA - <a href="javascript:void(0);">Get Directions</a></p>
-											<ul class="clinic-gallery">
-												<li>
-													<a href="{% static 'client-assets/img/features/feature-01.jpg'%}" data-fancybox="gallery">
-														<img src="{% static 'client-assets/img/features/feature-01.jpg'%}" alt="Feature">
-													</a>
-												</li>
-												<li>
-													<a href="{% static 'client-assets/img/features/feature-02.jpg'%}" data-fancybox="gallery">
-														<img  src="{% static 'client-assets/img/features/feature-02.jpg'%}" alt="Feature Image">
-													</a>
-												</li>
-												<li>
-													<a href="{% static 'client-assets/img/features/feature-03.jpg'%}" data-fancybox="gallery">
-														<img src="{% static 'client-assets/img/features/feature-03.jpg'%}" alt="Feature">
-													</a>
-												</li>
-												<li>
-													<a href="{% static 'client-assets/img/features/feature-04.jpg'%}" data-fancybox="gallery">
-														<img src="{% static 'client-assets/img/features/feature-04.jpg'%}" alt="Feature">
-													</a>
-												</li>
-											</ul>
-										</div>
-										<div class="clinic-services">
-											<span>Dental Fillings</span>
-											<span>Teeth Whitneing</span>
+											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</p>
 										</div>
 									</div>
 								</div>
 								<div class="doc-info-right">
 									<div class="clini-infos">
 										<ul>
-											<li><i class="far fa-thumbs-up"></i> 99%</li>
 											<li><i class="far fa-comment"></i> 35 Feedback</li>
-											<li><i class="fas fa-map-marker-alt"></i> Newyork, USA</li>
-											<li><i class="far fa-money-bill-alt"></i> $100 per hour </li>
+											<li><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</li>
+											<li><i class="far fa-money-bill-alt"></i> {{doctor.pricing}} </li>
 										</ul>
-									</div>
-									<div class="doctor-action">
-										<a href="javascript:void(0)" class="btn btn-white fav-btn">
-											<i class="far fa-bookmark"></i>
-										</a>
-										<a href="chat.html" class="btn btn-white msg-btn">
-											<i class="far fa-comment-alt"></i>
-										</a>
-										<a href="javascript:void(0)" class="btn btn-white call-btn" data-toggle="modal" data-target="#voice_call">
-											<i class="fas fa-phone"></i>
-										</a>
-										<a href="javascript:void(0)" class="btn btn-white call-btn" data-toggle="modal" data-target="#video_call">
-											<i class="fas fa-video"></i>
-										</a>
 									</div>
 									<div class="clinic-booking">
 										<a class="apt-btn" href="booking.html">Book Appointment</a>
@@ -154,9 +113,6 @@
 								<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
 									<li class="nav-item">
 										<a class="nav-link active" href="#doc_overview" data-toggle="tab">Overview</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="#doc_locations" data-toggle="tab">Locations</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
@@ -339,172 +295,6 @@
 								</div>
 								<!-- /Overview Content -->
 								
-								<!-- Locations Content -->
-								<div role="tabpanel" id="doc_locations" class="tab-pane fade">
-								
-									<!-- Location List -->
-									<div class="location-list">
-										<div class="row">
-										
-											<!-- Clinic Content -->
-											<div class="col-md-6">
-												<div class="clinic-content">
-													<h4 class="clinic-name"><a href="#">Smile Cute Dental Care Center</a></h4>
-													<p class="doc-speciality">MDS - Periodontology and Oral Implantology, BDS</p>
-													<div class="rating">
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star"></i>
-														<span class="d-inline-block average-rating">(4)</span>
-													</div>
-													<div class="clinic-details mb-0">
-														<h5 class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> 2286  Sundown Lane, Austin, Texas 78749, USA <br><a href="javascript:void(0);">Get Directions</a></h5>
-														<ul>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-01.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-01.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-02.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-02.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-03.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-03.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-04.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-04.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-														</ul>
-													</div>
-												</div>
-											</div>
-											<!-- /Clinic Content -->
-											
-											<!-- Clinic Timing -->
-											<div class="col-md-4">
-												<div class="clinic-timing">
-													<div>
-														<p class="timings-days">
-															<span> Mon - Sat </span>
-														</p>
-														<p class="timings-times">
-															<span>10:00 AM - 2:00 PM</span>
-															<span>4:00 PM - 9:00 PM</span>
-														</p>
-													</div>
-													<div>
-													<p class="timings-days">
-														<span>Sun</span>
-													</p>
-													<p class="timings-times">
-														<span>10:00 AM - 2:00 PM</span>
-													</p>
-													</div>
-												</div>
-											</div>
-											<!-- /Clinic Timing -->
-											
-											<div class="col-md-2">
-												<div class="consult-price">
-													$250
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- /Location List -->
-									
-									<!-- Location List -->
-									<div class="location-list">
-										<div class="row">
-										
-											<!-- Clinic Content -->
-											<div class="col-md-6">
-												<div class="clinic-content">
-													<h4 class="clinic-name"><a href="#">The Family Dentistry Clinic</a></h4>
-													<p class="doc-speciality">MDS - Periodontology and Oral Implantology, BDS</p>
-													<div class="rating">
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star filled"></i>
-														<i class="fas fa-star"></i>
-														<span class="d-inline-block average-rating">(4)</span>
-													</div>
-													<div class="clinic-details mb-0">
-														<p class="clinic-direction"> <i class="fas fa-map-marker-alt"></i> 2883  University Street, Seattle, Texas Washington, 98155 <br><a href="javascript:void(0);">Get Directions</a></p>
-														<ul>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-01.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-01.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-02.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-02.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-03.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-03.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-															<li>
-																<a href="{% static 'client-assets/img/features/feature-04.jpg'%}" data-fancybox="gallery2">
-																	<img src="{% static 'client-assets/img/features/feature-04.jpg'%}" alt="Feature Image">
-																</a>
-															</li>
-														</ul>
-													</div>
-
-												</div>
-											</div>
-											<!-- /Clinic Content -->
-											
-											<!-- Clinic Timing -->
-											<div class="col-md-4">
-												<div class="clinic-timing">
-													<div>
-														<p class="timings-days">
-															<span> Tue - Fri </span>
-														</p>
-														<p class="timings-times">
-															<span>11:00 AM - 1:00 PM</span>
-															<span>6:00 PM - 11:00 PM</span>
-														</p>
-													</div>
-													<div>
-														<p class="timings-days">
-															<span>Sat - Sun</span>
-														</p>
-														<p class="timings-times">
-															<span>8:00 AM - 10:00 AM</span>
-															<span>3:00 PM - 7:00 PM</span>
-														</p>
-													</div>
-												</div>
-											</div>
-											<!-- /Clinic Timing -->
-											
-											<div class="col-md-2">
-												<div class="consult-price">
-													$350
-												</div>
-											</div>
-										</div>
-									</div>
-									<!-- /Location List -->
-
-								</div>
-								<!-- /Locations Content -->
-								
 								<!-- Reviews Content -->
 								<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
 								
@@ -675,142 +465,7 @@
 			<!-- /Page Content -->
    
 			<!-- Footer -->
-			<footer class="footer">
-				
-				<!-- Footer Top -->
-				<div class="footer-top">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-about">
-									<div class="footer-logo">
-										<img src="{% static 'client-assets/img/footer-logo.png'%}" alt="logo">
-									</div>
-									<div class="footer-about-content">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-										<div class="social-icon">
-											<ul>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-dribbble"></i> </a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Patients</h2>
-									<ul>
-										<li><a href="search.html"><i class="fas fa-angle-double-right"></i> Search for Doctors</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="booking.html"><i class="fas fa-angle-double-right"></i> Booking</a></li>
-										<li><a href="patient-dashboard.html"><i class="fas fa-angle-double-right"></i> Patient Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Doctors</h2>
-									<ul>
-										<li><a href="appointments.html"><i class="fas fa-angle-double-right"></i> Appointments</a></li>
-										<li><a href="chat.html"><i class="fas fa-angle-double-right"></i> Chat</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="doctor-register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="doctor-dashboard.html"><i class="fas fa-angle-double-right"></i> Doctor Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-contact">
-									<h2 class="footer-title">Contact Us</h2>
-									<div class="footer-contact-info">
-										<div class="footer-address">
-											<span><i class="fas fa-map-marker-alt"></i></span>
-											<p> 3556  Beech Street, San Francisco,<br> California, CA 94108 </p>
-										</div>
-										<p>
-											<i class="fas fa-phone-alt"></i>
-											+1 315 369 5943
-										</p>
-										<p class="mb-0">
-											<i class="fas fa-envelope"></i>
-											doccure@example.com
-										</p>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-						</div>
-					</div>
-				</div>
-				<!-- /Footer Top -->
-				
-				<!-- Footer Bottom -->
-                <div class="footer-bottom">
-					<div class="container-fluid">
-					
-						<!-- Copyright -->
-						<div class="copyright">
-							<div class="row">
-								<div class="col-md-6 col-lg-6">
-									<div class="copyright-text">
-										<p class="mb-0"><a href="templateshub.net">Templates Hub</a></p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-6">
-								
-									<!-- Copyright Menu -->
-									<div class="copyright-menu">
-										<ul class="policy-menu">
-											<li><a href="term-condition.html">Terms and Conditions</a></li>
-											<li><a href="privacy-policy.html">Policy</a></li>
-										</ul>
-									</div>
-									<!-- /Copyright Menu -->
-									
-								</div>
-							</div>
-						</div>
-						<!-- /Copyright -->
-						
-					</div>
-				</div>
-				<!-- /Footer Bottom -->
-				
-			</footer>
+			{% include 'components/footer.html' %}
 			<!-- /Footer -->
 		   
 		</div>
