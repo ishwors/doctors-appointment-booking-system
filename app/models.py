@@ -3,6 +3,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.text import slugify
+from django.db.models.signals import pre_save
+from django.urls import reverse
 
 # Gender
 class Gender(models.Model):
@@ -49,6 +52,10 @@ class Doctor(models.Model):
     degree = models.CharField(max_length=10, null=True)
     experience = models.CharField(max_length=5, null=True)
     designation = models.CharField(max_length=30, null=True)
+    slug = models.SlugField(default='', max_length=500, null=True, blank=True)
+
+    def get_profile_url(self):
+        return reverse("doctor-profile", kwargs={'slug': self.slug})
     
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -71,6 +78,29 @@ def save_user_profile(sender, instance, **kwargs):
             instance.doctor.profile_pic = "default.png"
         instance.doctor.save()
 
+# Slug
+def create_slug(instance, new_slug=None):
+    slug = slugify(instance.user.first_name)
+    if new_slug is not None:
+        slug = new_slug
+    qs = Doctor.objects.filter(slug=slug).order_by('-id')
+    exists = qs.exists()
+    if exists:
+        new_slug = "%s-%s" % (slug, qs.first().id)
+        return create_slug(instance, new_slug=new_slug)
+    return slug
+
+def pre_save_post_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = create_slug(instance)
+
+pre_save.connect(pre_save_post_receiver, Doctor)
 
 
+# Review 
+class Review(models.Model):
+    rating = models.IntegerField()
+    review_text = models.TextField(max_length=150)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE , null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE , null=True)
 

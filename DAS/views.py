@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import CustomPasswordChangeForm
-from app.models import Doctor, Gender, Patient, Specialization
+from app.models import Doctor, Gender, Patient, Review, Specialization
 from django.template.loader import render_to_string
 from django.db.models import Q
 
@@ -96,8 +96,46 @@ def autocomplete(request):
 
     return render(request,'main/search.html')
 
-def DOCTOR_PROFILE(request):
-    return render(request,'main/doctor-profile.html')
+def DOCTOR_PROFILE(request,slug):
+    doctors = Doctor.objects.get(slug=slug)
+    id = doctors.id
+    doctor = Doctor.objects.filter(slug = slug)
+    if doctor.exists():
+        doctor = doctor.first()
+    else:
+        return redirect(request,'error/404.html')
+    
+    patient_id = request.user.id
+
+    review_filter = Review.objects.filter(doctor_id=id)
+    user = User.objects.filter(last_name = 'Patient').order_by('id')
+
+    context = {
+        'review': review_filter,
+        'user' : user,
+    }
+    
+    if request.method == 'POST' and patient_id is not None:
+        rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+
+        patient_id = request.user.id
+   
+        review = Review(
+                rating=rating,
+                review_text=review_text,
+                patient_id=patient_id,
+                doctor_id= id,
+            )
+         
+        review.save()
+        return redirect('doctor-profile', slug=doctor.slug)
+    
+    elif request.method == 'POST' and patient_id is None:
+        return redirect('login')
+        # Note : Please login to write review message needs to be displayed
+        
+    return render(request, 'main/doctor-profile.html', context)
 
 def register(request):
     if request.method == "POST":
