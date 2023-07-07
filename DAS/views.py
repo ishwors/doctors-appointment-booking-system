@@ -1,24 +1,92 @@
 
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.forms import SlugField
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordChangeView
+from django.urls import reverse_lazy
+
+from .forms import CustomPasswordChangeForm
+from app.models import Doctor, Patient, Review
 
 from DAS import email_backend
-# from app.models import Patient
+
+class CustomPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = 'main/change-password.html'
+    success_url = reverse_lazy('patient-dashboard')
+
+class CustomDoctorPasswordChangeView(PasswordChangeView):
+    form_class = CustomPasswordChangeForm
+    template_name = 'main/doctor-change-password.html'
+    success_url = reverse_lazy('doctor-dashboard')
+
 
 def index(request):
     return render(request,'main/index.html')
 
+@login_required(login_url="login")
 def DOCTOR_DASHBOARD(request):
-    return render(request,'main/doctor-dashboard.html')
+    if request.user.last_name == "Doctor":
+        return render(request,'main/doctor-dashboard.html')
+    
+    return render(request,'main/login.html')
+    
 
 def APPOINTMENTS(request):
     return render(request,'main/appointments.html')
 
 def LOGIN(request):
     return render(request,'main/login.html')
+
+def LOGOUT(request):
+    logout(request)
+    return redirect('login')
+
+def SEARCH(request):
+    user = User.objects.filter(last_name = 'Doctor').order_by('id')
+    return render(request, 'main/search.html', {'user': user})
+
+def DOCTOR_PROFILE(request,slug ):
+    
+    doctors = Doctor.objects.get(slug=slug)
+    id_doctor = doctors.id
+    doctor = Doctor.objects.filter(slug = slug)
+    if doctor.exists():
+        doctor = doctor.first()
+    else:
+        return redirect(request,'error/404.html')
+    
+    review = Review.objects.filter(doctor_id = id_doctor)
+    
+    context = {
+        # 'doctor': doctor,
+        'review': review
+    }
+    
+    if request.method == 'POST':
+        rating = request.POST.get('rating')
+        review_text = request.POST.get('review_text')
+
+        user_id = request.user.id
+        user = User.objects.get(id=user_id)
+        patient = request.user.patient
+        patient_id = patient.id
+   
+        review = Review(
+                rating=rating,
+                review_text=review_text,
+                patient_id=patient_id,
+                doctor_id= id_doctor,
+            )
+         
+         
+        review.save()
+        return redirect('doctor-profile', slug=doctor.slug)
+    return render(request, 'main/doctor-profile.html', context)
+
 
 def register(request):
     if request.method == "POST":
@@ -104,15 +172,16 @@ def DO_LOGIN(request):
            messages.error(request,'Email and Password Are Invalid !')
            return redirect('login')
 
+@login_required(login_url="login")
 def PATIENT_DASHBOARD(request):
-    return render(request,'main/patient-dashboard.html')
+    if request.user.last_name == "Patient":
+        return render(request,'main/patient-dashboard.html')
+    
+    return render(request,'main/login.html')
 
-
-# Patient
-@login_required(login_url="/main/login/")
 def PROFILE_SETTINGS(request):
     if request.method == "POST":
-        image = request.POST.get('image')
+        image = request.FILES.get('image')
         username = request.POST.get('username')
         fname = request.POST.get('fname')
         email = request.POST.get('email')
@@ -129,9 +198,13 @@ def PROFILE_SETTINGS(request):
         user_id = request.user.id
         user = User.objects.get(id=user_id)
         patient = user.patient
-        
+
     # To update existing records
-        patient.profile_pic = image
+        if image is None:
+            patient.profile_pic = patient.profile_pic
+        else:
+            patient.profile_pic = image
+
         patient.dob = dob
         patient.blood_group = blood
         patient.mobile = mobile
@@ -152,9 +225,6 @@ def PROFILE_SETTINGS(request):
         return render(request,'main/profile-settings.html')
     return render(request,'main/profile-settings.html')
 
-
-# Doctor
-@login_required(login_url="/main/login/")
 def DOCTOR_PROFILE_SETTINGS(request):
     if request.method == "POST":
         image = request.POST.get('image')
@@ -203,3 +273,4 @@ def DOCTOR_PROFILE_SETTINGS(request):
 
         return render(request,'main/doctor-profile-settings.html')
     return render(request,'main/doctor-profile-settings.html')
+

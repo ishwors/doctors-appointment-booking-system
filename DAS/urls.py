@@ -15,18 +15,29 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls.static import static
+from django.conf import settings
 from .import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('admin/', admin.site.urls ),
+    path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('doctor-dashboard/',views.DOCTOR_DASHBOARD, name='doctor-dashboard'),
     path('appointments/',views.APPOINTMENTS, name='appointments'),
     path('login/',views.LOGIN, name='login'),
+    path('logout/', views.LOGOUT, name='logout'),
     path('register/',views.register, name='register'),
+    path('doctor-register/',views.doctor_register, name='doctor-register'),
     path('doLogin', views.DO_LOGIN, name='doLogin'),
     path('patient-dashboard/', views.PATIENT_DASHBOARD, name='patient-dashboard'),
     path('profile-settings/', views.PROFILE_SETTINGS, name='profile-settings'),
-    path('doctor-register/',views.doctor_register, name='doctor-register'),
+    path('change-password/', views.CustomPasswordChangeView.as_view(), name='change-password'),
+    path('doctor-change-password/', views.CustomDoctorPasswordChangeView.as_view(), name='doctor-change-password'),
+    path('search/', views.SEARCH, name='search'),
+    # path('doctor-profile/', views.DOCTOR_PROFILE, name='doctor-profile'),
     path('doctor-profile-settings', views.DOCTOR_PROFILE_SETTINGS, name='doctor-profile-settings'),
+    path('doctor/<slug:slug>', views.DOCTOR_PROFILE, name='doctor-profile'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
