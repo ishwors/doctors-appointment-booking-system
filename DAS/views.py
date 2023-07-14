@@ -86,12 +86,10 @@ def autocomplete(request):
         user = User.objects.filter(last_name = 'Doctor')
         search_term = request.GET.get('term')
 
-        qs = user.filter( Q(doctor__address__icontains=search_term)
-                       | Q(doctor__clinic_name__icontains=search_term) 
-                       | Q(first_name__icontains=search_term )) 
+        qs = user.filter(Q(first_name__icontains=search_term )) 
         titles = list()
 
-        titles = [f"{user.first_name}, {user.doctor.address}, {user.doctor.clinic_name}" for user in qs]
+        titles = [f"{user.first_name}" for user in qs]
         return JsonResponse(titles, safe=False)
 
     return render(request,'main/search.html')
@@ -355,3 +353,19 @@ def filter_data(request):
 
     return JsonResponse({'data': t})
 
+def REVIEWS(request):
+    doctorid = request.user.id
+    doctor = Doctor.objects.get(user_id=doctorid)
+    id = doctor.id
+
+    review_filter = Review.objects.filter(doctor_id=id)
+
+    # For Patient :
+    patient = User.objects.filter(last_name = 'Patient').order_by('id')
+
+    context = {
+        'review': review_filter,
+        'patient' : patient,
+    }
+
+    return render(request, 'main/reviews.html', context)

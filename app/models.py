@@ -104,3 +104,11 @@ class Review(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE , null=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE , null=True)
 
+# Slot
+class Slot(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    available = models.BooleanField(default=True)
+    date = models.DateField()
+

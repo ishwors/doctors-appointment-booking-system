@@ -41,6 +41,7 @@ urlpatterns = [
     path('filter-data', views.filter_data, name='filter_data'),
     path('index-search', views.index_search, name='index-search'),
     path('autocomplete', views.autocomplete, name='autocomplete'),
+    path('reviews', views.REVIEWS, name='reviews'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
