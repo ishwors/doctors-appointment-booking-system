@@ -1,0 +1,63 @@
+<!-- FOR MONDAY -->
+<div class="row form-row">
+    <div class="col-12 col-md-12">
+            <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="customCheck1_friday" value="1" name="time"> 
+                <label class="custom-control-label" for="customCheck1_friday">10:00 am - 10:30 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck2_friday" value="2" name="time">
+                <label class="custom-control-label" for="customCheck2_friday">10:30 am - 11:00 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck3_friday" value="3" name="time">
+                <label class="custom-control-label" for="customCheck3_friday">11:00 am - 11:30 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck4_friday" value="4" name="time">
+                <label class="custom-control-label" for="customCheck4_friday">11:30 am - 12:00 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck5_friday" value="5" name="time">
+                <label class="custom-control-label" for="customCheck5_friday">1:00 pm - 1:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck6_friday" value="6" name="time">
+                <label class="custom-control-label" for="customCheck6_friday">1:30 pm - 2:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck7_friday" value="7" name="time">
+                <label class="custom-control-label" for="customCheck7_friday">2:00 pm - 2:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck8_friday" value="8" name="time">
+                <label class="custom-control-label" for="customCheck8_friday">2:30 pm - 3:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck9_friday" value="9" name="time">
+                <label class="custom-control-label" for="customCheck9_friday">3:00 pm - 3:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck10_friday" value="10" name="time">
+                <label class="custom-control-label" for="customCheck10_friday">3:30 pm - 4:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck11_friday" value="11" name="time">
+                <label class="custom-control-label" for="customCheck11_friday">4:00 pm - 4:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck12_friday" value="12" name="time">
+                <label class="custom-control-label" for="customCheck12_friday">4:30 pm - 5:00 pm</label>
+            </div>
+        
+        {% for i in schedule %}
+            {% if i.day == 'friday' %}
+                <script>
+                    // Add the 'checked' attribute to the corresponding checkbox
+                    document.getElementById('customCheck{{ i.timing.id }}_friday').checked = true;
+                </script>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+

@@ -112,3 +112,17 @@ class Slot(models.Model):
     available = models.BooleanField(default=True)
     date = models.DateField()
 
+# Timing
+class Timing(models.Model):
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+# Associative
+class Schedule(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    timing = models.ForeignKey(Timing, on_delete=models.CASCADE)
+    day = models.CharField(max_length=15, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+

@@ -1,4 +1,5 @@
 
+import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -8,9 +9,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import CustomPasswordChangeForm
-from app.models import Doctor, Gender, Patient, Review, Specialization
+from app.models import Doctor, Gender, Patient, Review, Specialization, Schedule, Timing
 from django.template.loader import render_to_string
 from django.db.models import Q
+from django.template.defaultfilters import date as format_date
 
 from DAS import email_backend
 
@@ -83,16 +85,23 @@ def index_search(request):
 
 def autocomplete(request):
     if 'term' in request.GET:
-        user = User.objects.filter(last_name = 'Doctor')
+        user = User.objects.filter(last_name='Doctor')
         search_term = request.GET.get('term')
 
-        qs = user.filter(Q(first_name__icontains=search_term )) 
-        titles = list()
+        users = user.filter(
+            Q(first_name__icontains=search_term)
+            | Q(doctor__clinic_name__icontains=search_term)
+            | Q(doctor__clinic_address__icontains=search_term)
+        )
 
-        titles = [f"{user.first_name}" for user in qs]
+        titles = [f"{user.first_name}" for user in users]
+        titles += [f"{user.doctor.clinic_name}" for user in users]
+        titles += [f"{user.doctor.clinic_address}" for user in users]
+
+
         return JsonResponse(titles, safe=False)
 
-    return render(request,'main/search.html')
+    return render(request, 'main/search.html')
 
 def DOCTOR_PROFILE(request,slug):
     doctors = Doctor.objects.get(slug=slug)
@@ -329,9 +338,6 @@ def DOCTOR_PROFILE_SETTINGS(request):
         return render(request,'main/doctor-profile-settings.html')
     return render(request,'main/doctor-profile-settings.html')
 
-def BOOKING(request):
-    return render(request,'main/booking.html')
-
 # Filter Data
 def filter_data(request):
     genders = request.GET.getlist('gender[]')
@@ -369,3 +375,117 @@ def REVIEWS(request):
     }
 
     return render(request, 'main/reviews.html', context)
+
+def SCHEDULE_TIMINGS(request):
+    doctorid = request.user.id
+    doctor = Doctor.objects.get(user_id=doctorid)
+    id = doctor.id
+
+    schedule = Schedule.objects.filter(doctor_id = id)   
+
+    context = {
+        'schedule' : schedule,
+    }
+
+    return render(request, 'main/schedule-timings.html', context)
+
+def DOCTOR_SCHEDULE(request):
+    doctorid = request.user.id
+    doctor = Doctor.objects.get(user_id=doctorid)
+    id = doctor.id
+
+    if request.method == "POST":
+        day = request.POST.get('day')
+        time = request.POST.getlist('time')
+
+        # Fetch existing schedule for the doctor
+        existing_schedule = Schedule.objects.filter(doctor_id=id)
+
+        # Update the schedule for the provided day
+        for schedule_entry in existing_schedule:
+            if schedule_entry.day == day and str(schedule_entry.timing_id) not in time:
+                # Unchecked schedule entry, delete it
+                schedule_entry.delete()
+
+        # Create or update the selected schedule entries
+        for data in time:
+            schedule_entry = existing_schedule.filter(day=day, timing_id=data).first()
+            if schedule_entry:
+                # Schedule entry exists, update the timing_id
+                schedule_entry.timing_id = data
+                schedule_entry.save()
+            else:
+                # Create a new schedule entry
+                schedule = Schedule(day=day, doctor_id=id, timing_id=data)
+                schedule.save()
+
+    return redirect('schedule-timings')
+
+def BOOKING(request):
+    # ******************SLUG KO KAM GARNA BAKI CHA **********************
+    # doctorid = request.user.id
+    # doctor = Doctor.objects.get(user_id=doctorid)
+    # id = doctor.id
+
+    if request.method == "POST":
+        date = request.POST.get('date')
+        
+        # Convert the date string to a datetime object
+        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+
+        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
+        day_of_week = date_obj.strftime('%A').lower()
+
+        value = Schedule.objects.filter(day = day_of_week)
+
+        context = {
+            'value' : value,
+            'date' : date
+        }
+
+        return render(request,'main/booking.html',context)
+    
+    
+    schedule = Schedule.objects.filter(doctor_id = 1)  
+
+    context = {
+        'schedule' : schedule,
+    }
+
+    return render(request,'main/booking.html',context)
+
+
+@login_required(login_url="login")
+def CHECKOUT(request):
+    if request.method == "POST":
+        date = request.POST.get('date')
+        time_id = request.POST.get('time')
+        
+        # Convert the date string to a datetime object
+        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+
+        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
+        day_of_week = date_obj.strftime('%A').lower()
+
+        value = Schedule.objects.filter(day = day_of_week)
+
+        formatted_date = format_date(date_obj, 'd M Y')
+
+        # Getting time from time id
+        time = Timing.objects.get(id = time_id)
+
+        
+        context = {
+            'date' : formatted_date,
+            'time' : time,
+        }
+
+        return render(request,'main/checkout.html',context)
+
+
+
+
+
+
+
+

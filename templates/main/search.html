@@ -35,6 +35,7 @@
 			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
 			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
 		<![endif]-->
+
 	</head>
 	<body>
 
@@ -207,20 +208,20 @@
 		<script src="{% static 'client-assets/js/script.js'%}"></script>
 
 		<!-- Search Bar Recommendation -->
-		<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-		<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
 
 		<script>
-			$(function() {
+			$(document).ready(function() {
 				$("#doc").autocomplete({
-					source: "{% url 'autocomplete' %}",
-					minLength: 1, // Minimum number of characters before autocomplete starts
-					delay: 300 // Delay in milliseconds before making the request
+					source: "{% url 'autocomplete'%}",
+					minLength: 1,
+					delay: 300
 				});
 			});
 		</script>
-		
+
 	</body>
 
 <!-- doccure/search.html  30 Nov 2019 04:12:16 GMT -->

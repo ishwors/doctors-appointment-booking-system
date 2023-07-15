@@ -1,0 +1,29 @@
+<div class="modal fade custom-modal" id="add_time_slot_tuesday">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Time Slots</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form action="{% url 'doctor-schedule' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" id="nameField" name="day" value="tuesday">
+                    <div class="hours-info">
+                        <div class="row form-row hours-cont ">
+                            <div class="col-12 col-md-10">
+                                {% include 'timings/tuesday.html' %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="submit-section text-center">
+                        <button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

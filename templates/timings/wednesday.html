@@ -1,0 +1,63 @@
+<!-- FOR MONDAY -->
+<div class="row form-row">
+    <div class="col-12 col-md-12">
+            <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="customCheck1_wednesday" value="1" name="time"> 
+                <label class="custom-control-label" for="customCheck1_wednesday">10:00 am - 10:30 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck2_wednesday" value="2" name="time">
+                <label class="custom-control-label" for="customCheck2_wednesday">10:30 am - 11:00 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck3_wednesday" value="3" name="time">
+                <label class="custom-control-label" for="customCheck3_wednesday">11:00 am - 11:30 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck4_wednesday" value="4" name="time">
+                <label class="custom-control-label" for="customCheck4_wednesday">11:30 am - 12:00 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck5_wednesday" value="5" name="time">
+                <label class="custom-control-label" for="customCheck5_wednesday">1:00 pm - 1:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck6_wednesday" value="6" name="time">
+                <label class="custom-control-label" for="customCheck6_wednesday">1:30 pm - 2:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck7_wednesday" value="7" name="time">
+                <label class="custom-control-label" for="customCheck7_wednesday">2:00 pm - 2:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck8_wednesday" value="8" name="time">
+                <label class="custom-control-label" for="customCheck8_wednesday">2:30 pm - 3:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck9_wednesday" value="9" name="time">
+                <label class="custom-control-label" for="customCheck9_wednesday">3:00 pm - 3:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck10_wednesday" value="10" name="time">
+                <label class="custom-control-label" for="customCheck10_wednesday">3:30 pm - 4:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck11_wednesday" value="11" name="time">
+                <label class="custom-control-label" for="customCheck11_wednesday">4:00 pm - 4:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck12_wednesday" value="12" name="time">
+                <label class="custom-control-label" for="customCheck12_wednesday">4:30 pm - 5:00 pm</label>
+            </div>
+        
+        {% for i in schedule %}
+            {% if i.day == 'wednesday' %}
+                <script>
+                    // Add the 'checked' attribute to the corresponding checkbox
+                    document.getElementById('customCheck{{ i.timing.id }}_wednesday').checked = true;
+                </script>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+

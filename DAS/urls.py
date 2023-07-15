@@ -42,6 +42,9 @@ urlpatterns = [
     path('index-search', views.index_search, name='index-search'),
     path('autocomplete', views.autocomplete, name='autocomplete'),
     path('reviews', views.REVIEWS, name='reviews'),
+    path('schedule-timings', views.SCHEDULE_TIMINGS, name='schedule-timings'),
+    path('doctor-schedule', views.DOCTOR_SCHEDULE, name='doctor-schedule'),
+    path('checkout', views.CHECKOUT, name='checkout'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
