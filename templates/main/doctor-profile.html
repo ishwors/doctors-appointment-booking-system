@@ -96,7 +96,7 @@
 										</ul>
 									</div>
 									<div class="clinic-booking">
-										<a class="apt-btn" href="{% url 'booking' %}">Book Appointment</a>
+										<a class="apt-btn" href="{{doctor.get_booking_url}}">Book Appointment</a>
 									</div>
 								</div>
 							</div>
@@ -390,76 +390,144 @@
 								<!-- Business Hours Content -->
 								<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">
 									<div class="row">
-										<div class="col-md-6 offset-md-3">
-										
-											<!-- Business Hours Widget -->
-											<div class="widget business-widget">
-												<div class="widget-content">
-													<div class="listing-hours">
-														<div class="listing-day current">
-															<div class="day">Today <span>5 Nov 2019</span></div>
-															<div class="time-items">
-																<span class="open-status"><span class="badge bg-success-light">Open Now</span></span>
-																<span class="time">07:00 AM - 09:00 PM</span>
+										<div class="col-md-12">
+											<!-- Schedule Widget -->
+											<div class="card booking-schedule schedule-widget">
+												
+												<!-- Schedule Header -->
+												<div class="schedule-header">
+													<div class="row">
+														<div class="col-md-12">
+														
+															<!-- Day Slot -->
+															<div class="day-slot">
+																<ul>
+																	<li>
+																		<span>Mon</span>
+																	</li>
+																	<li>
+																		<span>Tue</span>
+																	</li>
+																	<li>
+																		<span>Wed</span>
+																	</li>
+																	<li>
+																		<span>Thu</span>
+																	</li>
+																	<li>
+																		<span>Fri</span>
+																	</li>
+																	<li>
+																		<span>Sat</span>
+																	</li>
+																	<li>
+																		<span>Sun</span>
+																	</li>
+
+																</ul>
 															</div>
-														</div>
-														<div class="listing-day">
-															<div class="day">Monday</div>
-															<div class="time-items">
-																<span class="time">07:00 AM - 09:00 PM</span>
-															</div>
-														</div>
-														<div class="listing-day">
-															<div class="day">Tuesday</div>
-															<div class="time-items">
-																<span class="time">07:00 AM - 09:00 PM</span>
-															</div>
-														</div>
-														<div class="listing-day">
-															<div class="day">Wednesday</div>
-															<div class="time-items">
-																<span class="time">07:00 AM - 09:00 PM</span>
-															</div>
-														</div>
-														<div class="listing-day">
-															<div class="day">Thursday</div>
-															<div class="time-items">
-																<span class="time">07:00 AM - 09:00 PM</span>
-															</div>
-														</div>
-														<div class="listing-day">
-															<div class="day">Friday</div>
-															<div class="time-items">
-																<span class="time">07:00 AM - 09:00 PM</span>
-															</div>
-														</div>
-														<div class="listing-day">
-															<div class="day">Saturday</div>
-															<div class="time-items">
-																<span class="time">07:00 AM - 09:00 PM</span>
-															</div>
-														</div>
-														<div class="listing-day closed">
-															<div class="day">Sunday</div>
-															<div class="time-items">
-																<span class="time"><span class="badge bg-danger-light">Closed</span></span>
-															</div>
+															<!-- /Day Slot -->
+															
 														</div>
 													</div>
 												</div>
+												<!-- /Schedule Header -->
+												
+												<!-- Schedule Content -->
+												<div class="schedule-cont">
+													<div class="row">
+														<div class="col-md-12">
+														
+															<!-- Time Slot -->
+															<div class="time-slot">
+																<ul class="clearfix">
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'monday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'tuesday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'wednesday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'thursday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'friday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'saturday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'sunday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+																</ul>
+															</div>
+															<!-- /Time Slot -->
+															
+														</div>
+													</div>
+												</div>
+												<!-- /Schedule Content -->
+												
 											</div>
-											<!-- /Business Hours Widget -->
-									
+											<!-- /Schedule Widget -->
 										</div>
 									</div>
 								</div>
-								<!-- /Business Hours Content -->
-								
+								<!-- /Doctor Details Tab -->
 							</div>
 						</div>
 					</div>
-					<!-- /Doctor Details Tab -->
-
 				</div>
 			</div>		
 			<!-- /Page Content -->

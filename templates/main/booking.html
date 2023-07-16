@@ -69,11 +69,11 @@
 							<div class="card">
 								<div class="card-body">
 									<div class="booking-doc-info">
-										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{% static 'client-assets/img/doctors/doctor-thumb-02.jpg'%}" alt="User Image">
+										<a href="{{doctor.get_profile_url}}" class="booking-doc-img">
+											<img src="{{doctor.profile_pic.url}}" alt="User Image">
 										</a>
 										<div class="booking-info">
-											<h4><a href="doctor-profile.html">Dr. Darren Elder</a></h4>
+											<h4><a href="{{doctor.get_profile_url}}">Dr. {{doctor.user.first_name}}</a></h4>
 											<div class="rating">
 												<i class="fas fa-star filled"></i>
 												<i class="fas fa-star filled"></i>
@@ -82,7 +82,7 @@
 												<i class="fas fa-star"></i>
 												<span class="d-inline-block average-rating">35</span>
 											</div>
-											<p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> Newyork, USA</p>
+											<p class="text-muted mb-0"><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</p>
 										</div>
 									</div>
 								</div>
@@ -120,7 +120,7 @@
 											</form>
 
 											{% else %}
-											<form action="{% url 'booking' %}" method="POST">
+											<form action="{{i.booking.get_booking_url}}" method="POST">
 												{% csrf_token %}
 
 												<div class="form-group">

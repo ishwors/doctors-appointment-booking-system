@@ -120,10 +120,14 @@ def DOCTOR_PROFILE(request,slug):
     # For Patient :
     user = User.objects.filter(last_name = 'Patient').order_by('id')
 
+    # For Doctor Schedule
+    schedule = Schedule.objects.filter(doctor_id = id)
+
     context = {
         'review': review_filter,
         'user' : user,
         'doctor' : doctor,
+        'schedule' : schedule,
     }
     
     if request.method == 'POST' and patient_id is not None:
@@ -421,41 +425,50 @@ def DOCTOR_SCHEDULE(request):
 
     return redirect('schedule-timings')
 
-def BOOKING(request):
-    # ******************SLUG KO KAM GARNA BAKI CHA **********************
-    # doctorid = request.user.id
-    # doctor = Doctor.objects.get(user_id=doctorid)
-    # id = doctor.id
+@login_required(login_url="login")
+def BOOKING(request,slug):
+    if request.user.last_name == "Patient":
 
-    if request.method == "POST":
-        date = request.POST.get('date')
-        
-        # Convert the date string to a datetime object
-        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+        doctors = Doctor.objects.get(slug=slug)
+        id = doctors.id  # This id is doctor table's doctor id
+        doctor = Doctor.objects.filter(slug = slug)
 
-        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
-        day_of_week = date_obj.strftime('%A').lower()
+        if doctor.exists():
+            doctor = doctor.first()
+        else:
+            return redirect(request,'error/404.html')
 
-        value = Schedule.objects.filter(day = day_of_week)
+        # For Time
+        if request.method == "POST": 
+            date = request.POST.get('date')
+            
+            # Convert the date string to a datetime object
+            date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
 
-        context = {
+            # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
+            day_of_week = date_obj.strftime('%A').lower()
+
+            
+            schedule = Schedule.objects.filter(doctor_id = id)
+            value = schedule.filter(day = day_of_week)
+
+            context = {
             'value' : value,
-            'date' : date
+            'date' : date,
+            'doctor' : doctor,
+            'schedule' : schedule,
+            }
+
+            return render(request,'main/booking.html',context)
+
+        # For Date
+        context = {
+            'doctor' : doctor,
         }
 
         return render(request,'main/booking.html',context)
-    
-    
-    schedule = Schedule.objects.filter(doctor_id = 1)  
+    return redirect('login')
 
-    context = {
-        'schedule' : schedule,
-    }
-
-    return render(request,'main/booking.html',context)
-
-
-@login_required(login_url="login")
 def CHECKOUT(request):
     if request.method == "POST":
         date = request.POST.get('date')
@@ -480,8 +493,8 @@ def CHECKOUT(request):
             'time' : time,
         }
 
-        return render(request,'main/checkout.html',context)
-
+    return render(request,'main/checkout.html',context)
+   
 
 
 
