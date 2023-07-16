@@ -37,7 +37,7 @@
 		<div class="main-wrapper">
 		
 			<!-- Header -->
-			{% include 'components/header.html' %}
+			{% include 'components/header-logout.html' %}
 			<!-- /Header -->
 			
 			<!-- Breadcrumb -->
@@ -47,7 +47,7 @@
 						<div class="col-md-12 col-12">
 							<nav aria-label="breadcrumb" class="page-breadcrumb">
 								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
 									<li class="breadcrumb-item active" aria-current="page">Schedule Timings</li>
 								</ol>
 							</nav>
@@ -90,7 +90,7 @@
 																<div class="schedule-nav">
 																	<ul class="nav nav-tabs nav-justified">
 																		<li class="nav-item">
-																			<a class="nav-link" data-toggle="tab" href="#slot_sunday">Sunday</a>
+																			<a class="nav-link" data-toggle="tab" href="#slot_sunday" >Sunday</a>
 																		</li>
 																		<li class="nav-item">
 																			<a class="nav-link" data-toggle="tab" href="#slot_monday">Monday</a>

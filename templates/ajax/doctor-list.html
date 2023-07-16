@@ -36,7 +36,7 @@
                 </div>
                 <div class="clinic-booking">
                     <a class="view-pro-btn" href="{{i.doctor.get_profile_url}}">View Profile</a>
-                    <a class="apt-btn" href="{% url 'booking' %}">Book Appointment</a>
+                    <a class="apt-btn" href="{{i.doctor.get_booking_url}}">Book Appointment</a>
                 </div>
             </div>
         </div>

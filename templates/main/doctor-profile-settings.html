@@ -42,9 +42,9 @@
 	<!-- Main Wrapper -->
 	<div class="main-wrapper">
 		
-		<!-- Header -->
-		{% include 'components/header.html' %}
-		<!-- /Header -->
+			<!-- Header -->
+			{% include 'components/header-logout.html' %}
+			<!-- /Header -->
 			
 		<!-- Breadcrumb -->
 		<div class="breadcrumb-bar">
@@ -53,7 +53,7 @@
 					<div class="col-md-12 col-12">
 						<nav aria-label="breadcrumb" class="page-breadcrumb">
 							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
+								<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
 								<li class="breadcrumb-item active" aria-current="page">Profile Settings</li>
 							</ol>
 						</nav>
@@ -117,22 +117,22 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Full Name <span class="text-danger">*</span></label>
-											<input type="text" class="form-control" value="{{user.first_name}}" name="fname">
+											<input type="text" class="form-control" value="{{user.first_name}}" name="fname" required>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Date of Birth</label>
-											<input type="text" class="form-control" value="{{user.doctor.dob|date:'Y-m-d'}}" name="dob">
+											<input type="date" class="form-control" value="{{dob}}" name="dob">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label>Gender</label>
 											<select class="form-control select" name="gender">
-												<option value="Male" {% if user.doctor.gender == 'Male' %}selected{% endif %}>Male</option>
-												<option value="Female" {% if user.doctor.gender == 'Female' %}selected{% endif %}>Female</option>
-												<option value="Others" {% if user.doctor.gender == 'Others' %}selected{% endif %}>Others</option>
+												<option value="1" {% if user.doctor.gender.title == 'Male' %}selected{% endif %}>Male</option>
+												<option value="2" {% if user.doctor.gender.title == 'Female' %}selected{% endif %}>Female</option>
+												<option value="3" {% if user.doctor.gender.title == 'Others' %}selected{% endif %}>Others</option>
 											</select>
 										</div>
 									</div>
@@ -211,12 +211,12 @@
 										<h4 class="card-title">Specialization</h4>
 										<div class="form-group">
 											<select class="form-control select" name="specialization">
-												<option value="Urology" {% if user.doctor.specialization == 'Urology' %}selected{% endif %}>Urology</option>
-												<option value="Neurology" {% if user.doctor.specialization == 'Neurology' %}selected{% endif %}>Neurology</option>
-												<option value="Dentist" {% if user.doctor.specialization == 'Dentist' %}selected{% endif %}>Dentist</option>
-												<option value="Orthopedic" {% if user.doctor.specialization == 'Orthopedic' %}selected{% endif %}>Orthopedic</option>
-												<option value="Cardiologist" {% if user.doctor.specialization == 'Cardiologist' %}selected{% endif %}>Cardiologist</option>
-												<option value="Pathologist" {% if user.doctor.specialization == 'Pathologist' %}selected{% endif %}>Pathologist</option>
+												<option value="1" {% if user.doctor.specialization.title == 'Urology' %}selected{% endif %}>Urology</option>
+												<option value="2" {% if user.doctor.specialization.title == 'Neurology' %}selected{% endif %}>Neurology</option>
+												<option value="3" {% if user.doctor.specialization.title == 'Dentist' %}selected{% endif %}>Dentist</option>
+												<option value="4" {% if user.doctor.specialization.title == 'Orthopedic' %}selected{% endif %}>Orthopedic</option>
+												<option value="5" {% if user.doctor.specialization.title == 'Cardiologist' %}selected{% endif %}>Cardiologist</option>
+												<option value="6" {% if user.doctor.specialization.title == 'Pathologist' %}selected{% endif %}>Pathologist</option>
 											</select>
 										</div> 
 									</div>

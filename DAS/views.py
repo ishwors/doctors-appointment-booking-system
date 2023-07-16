@@ -28,14 +28,20 @@ class CustomDoctorPasswordChangeView(PasswordChangeView):
 
 
 def index(request):
-    return render(request,'main/index.html')
+    doctor = Doctor.objects.all().order_by('id')
+
+    context = { 
+        'doctor': doctor
+    }
+
+    return render(request,'main/index.html',context)
 
 @login_required(login_url="login")
 def DOCTOR_DASHBOARD(request):
     if request.user.last_name == "Doctor":
         return render(request,'main/doctor-dashboard.html')
     
-    return render(request,'main/login.html')
+    return redirect('login')
     
 
 def APPOINTMENTS(request):
@@ -179,11 +185,6 @@ def register(request):
         user.set_password(password)
         user.save()
 
-        # user_id = request.user.id
-        # user = User.objects.get(id=user_id)
-        # patient = user.patient
-        # patient.id = user_id
-
         return redirect('login')
     return render(request,'main/register.html')
 
@@ -197,12 +198,12 @@ def doctor_register(request):
         # check username
         if User.objects.filter(username=username).exists():
            messages.warning(request,'That username has already been taken!')
-           return redirect('register')
+           return redirect('doctor-register')
         
         # check email
         if User.objects.filter(email=email).exists():
            messages.warning(request,'Email already exists!')
-           return redirect('register')
+           return redirect('doctor-register')
         
         user = User(
             first_name = fname,
@@ -233,7 +234,7 @@ def DO_LOGIN(request):
                 login(request,user)
                 return redirect('doctor-dashboard')
         else:
-           messages.error(request,'Email and Password Are Invalid !')
+           messages.error(request,'Invalid Email or Password !')
            return redirect('login')
 
 @login_required(login_url="login")
@@ -241,16 +242,23 @@ def PATIENT_DASHBOARD(request):
     if request.user.last_name == "Patient":
         return render(request,'main/patient-dashboard.html')
     
-    return render(request,'main/login.html')
+    return redirect('login')
+
 
 def PROFILE_SETTINGS(request):
+    # Important code to access user and patient table
+    user_id = request.user.id
+    user = User.objects.get(id=user_id)
+    patient = user.patient
+    dob = user.patient.dob.strftime('%Y-%m-%d') if user.patient.dob else ''
+
     if request.method == "POST":
         image = request.FILES.get('image')
         username = request.POST.get('username')
         fname = request.POST.get('fname')
         email = request.POST.get('email')
         blood = request.POST.get('blood')
-        dob= request.POST.get('dob')
+        dob = request.POST.get('dob')
         mobile = request.POST.get('mobile')
         address = request.POST.get('address')
         city = request.POST.get('city')
@@ -258,12 +266,7 @@ def PROFILE_SETTINGS(request):
         zip = request.POST.get('zip')
         country = request.POST.get('country')
 
-    # Important code to access user and patient table
-        user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        patient = user.patient
-
-    # To update existing records
+        # To update existing records
         if image is None:
             patient.profile_pic = patient.profile_pic
         else:
@@ -286,10 +289,27 @@ def PROFILE_SETTINGS(request):
             
         user.save()
 
-        return render(request,'main/profile-settings.html')
-    return render(request,'main/profile-settings.html')
+        context = {
+            'user': user,
+            'dob': dob,
+        }
+
+        return render(request, 'main/profile-settings.html', context)
+    
+    context = {
+        'dob': dob,
+    }
+
+    return render(request, 'main/profile-settings.html', context)
+
 
 def DOCTOR_PROFILE_SETTINGS(request):
+# Important code to access user and patient table
+    user_id = request.user.id
+    user = User.objects.get(id=user_id)
+    doctor = user.doctor
+    dob = user.doctor.dob.strftime('%Y-%m-%d') if user.doctor.dob else ''
+
     if request.method == "POST":
         image = request.FILES.get('image')
         username = request.POST.get('username')
@@ -308,11 +328,6 @@ def DOCTOR_PROFILE_SETTINGS(request):
         clinic_name = request.POST.get('clinic_name')
         clinic_address = request.POST.get('clinic_address')
 
-    # Important code to access user and patient table
-        user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        doctor = user.doctor
-        
     # To update existing records
         if image is None:
             doctor.profile_pic = doctor.profile_pic
@@ -322,13 +337,13 @@ def DOCTOR_PROFILE_SETTINGS(request):
         doctor.dob = dob
         doctor.mobile = mobile
         doctor.address = address
-        doctor.specialization = specialization
+        doctor.specialization_id = specialization
         doctor.degree = degree
         doctor.pricing = pricing
         doctor.bio = bio
         doctor.designation =  designation 
         doctor.experience =  experience
-        doctor.gender = gender
+        doctor.gender_id = gender
         doctor.clinic_name = clinic_name
         doctor.clinic_address = clinic_address
         doctor.save()
@@ -339,8 +354,18 @@ def DOCTOR_PROFILE_SETTINGS(request):
             
         user.save()
 
-        return render(request,'main/doctor-profile-settings.html')
-    return render(request,'main/doctor-profile-settings.html')
+        context = {
+            'user': user,
+            'dob': dob,
+        }
+
+        return render(request,'main/doctor-profile-settings.html',context)
+    
+    context = {
+    'dob': dob,
+    }
+
+    return render(request,'main/doctor-profile-settings.html',context)
 
 # Filter Data
 def filter_data(request):

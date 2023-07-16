@@ -40,7 +40,7 @@
 		<div class="main-wrapper">
 		
 			<!-- Header -->
-			{% include 'components/header.html' %}
+			{% include 'components/header-logout.html' %}
 			<!-- /Header -->
 			
 			<!-- Breadcrumb -->
@@ -50,7 +50,7 @@
 						<div class="col-md-12 col-12">
 							<nav aria-label="breadcrumb" class="page-breadcrumb">
 								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
 									<li class="breadcrumb-item active" aria-current="page">Profile Settings</li>
 								</ol>
 							</nav>
@@ -98,7 +98,7 @@
 											<div class="col-12 col-md-6">
 												<div class="form-group">
 													<label>Full Name</label>
-													<input type="text" class="form-control" value="{{user.first_name}}" name="fname">
+													<input type="text" class="form-control" value="{{user.first_name}}" name="fname" required>
 												</div>
 											</div>
 											<div class="col-12 col-md-6">
@@ -131,9 +131,7 @@
 											<div class="col-12 col-md-6">
 												<div class="form-group">
 													<label>Date of Birth</label>
-													<div class="cal-icon">
-														<input type="text" class="form-control" value="{{user.patient.dob|date:'Y-m-d'}}" name="dob">
-													</div>
+													<input type="date" class="form-control" value="{{dob}}" name="dob">
 												</div>
 											</div>
 											<div class="col-12 col-md-6">

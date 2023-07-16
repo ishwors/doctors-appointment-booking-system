@@ -29,6 +29,19 @@
 			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
 			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
 		<![endif]-->
+
+		<style>
+			.time-slot ul {
+				display: flex;
+				justify-content: space-between;
+				list-style: none;
+				padding: 0;
+			}
+		
+			.time-slot ul li {
+				flex-basis: 14%;
+			}
+		</style>
 	
 	</head>
 	<body>
@@ -47,7 +60,7 @@
 						<div class="col-md-12 col-12">
 							<nav aria-label="breadcrumb" class="page-breadcrumb">
 								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
 									<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
 								</ol>
 							</nav>
