@@ -1,0 +1,47 @@
+{% load static %}
+<header class="header">
+    <nav class="navbar navbar-expand-lg header-nav">
+        <div class="navbar-header">
+            <a href="{% url 'index' %}" class="navbar-brand logo">
+                <img src="{% static 'client-assets/img/logo.png' %}" class="img-fluid" alt="Logo">
+            </a>
+        </div>
+        <div class="main-menu-wrapper">
+            <ul class="main-nav">
+                <li>
+                    <a href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="has-submenu">
+                    <a href="#">Doctors <i class="fas fa-chevron-down"></i></a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'doctor-dashboard' %}">Doctor Dashboard</a></li>
+                        <li><a href="{% url 'login' %}">Doctor Login</a></li>
+                        <li><a href="{% url 'doctor-register' %}">Doctor Register</a></li>
+                    </ul>
+                </li>	
+                <li class="has-submenu">
+                    <a href="#">Patients <i class="fas fa-chevron-down"></i></a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'patient-dashboard' %}">Patient Dashboard</a></li>
+                        <li><a href="{% url 'login' %}">Patient Login</a></li>
+                        <li><a href="{% url 'register' %}">Patient Register</a></li>
+                    </ul>
+                </li>	
+                <li>
+                    <a href="/admin/" target="_blank">Admin</a>
+                </li>
+                <li>
+                    <a href="{% url 'search' %}">
+                        <i class="fas fa-search"></i>
+                        <span>Search Doctor</span>
+                    </a>
+                </li>
+            </ul>		 
+        </div>		 
+        <ul class="nav header-navbar-rht">
+            <li class="nav-item">
+                <a class="nav-link header-login" href="{% url 'logout' %}">logout </a>
+            </li>
+        </ul>
+    </nav>
+</header>
