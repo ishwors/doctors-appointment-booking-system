@@ -13,6 +13,8 @@ from app.models import Doctor, Gender, Patient, Review, Specialization, Schedule
 from django.template.loader import render_to_string
 from django.db.models import Q
 from django.template.defaultfilters import date as format_date
+from django.db.models import Avg, Count
+
 
 from DAS import email_backend
 
@@ -28,10 +30,13 @@ class CustomDoctorPasswordChangeView(PasswordChangeView):
 
 
 def index(request):
-    doctor = Doctor.objects.all().order_by('id')
+    doctors = Doctor.objects.all().order_by('id')
 
+    for doctor in doctors:
+        doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
+    
     context = { 
-        'doctor': doctor
+        'doctor': doctors
     }
 
     return render(request,'main/index.html',context)
@@ -55,17 +60,48 @@ def LOGOUT(request):
     return redirect('login')
 
 def SEARCH(request):
-    user = User.objects.filter(last_name = 'Doctor').order_by('id')
+    doctors = Doctor.objects.all().order_by('id')
     gender = Gender.objects.all().order_by('id')
     specialization = Specialization.objects.all().order_by('id')
 
+
+    for doctor in doctors:
+        doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
+
     context = { 
-        'user':user,    
+        'doctors':doctors,    
         'gender':gender,
         'specialization':specialization,
     }
 
     return render(request, 'main/search.html',context)
+
+from django.db.models import Avg, Count
+
+def filter_data(request):
+    genders = request.GET.getlist('gender[]')
+    specializations = request.GET.getlist('specialization[]')
+
+    doctors = Doctor.objects.all()
+
+    # Filter based on genders if genders are provided
+    if genders:
+        doctors = doctors.filter(gender__id__in=genders)
+    
+    # Filter based on specializations if specializations are provided
+    if specializations:
+        doctors = doctors.filter(specialization__id__in=specializations)
+
+    aggregated_reviews = {}  # Dictionary to store aggregated reviews
+
+    for doctor in doctors:
+        aggregated_reviews[doctor.id] = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
+        doctor.aggregated_review = aggregated_reviews[doctor.id]
+
+    t = render_to_string('ajax/doctor-list.html', {'doctors': doctors})
+
+    return JsonResponse({'data': t})
+
 
 def index_search(request):
     q=request.GET['search']
@@ -109,38 +145,45 @@ def autocomplete(request):
 
     return render(request, 'main/search.html')
 
-def DOCTOR_PROFILE(request,slug):
+def DOCTOR_PROFILE(request, slug):
     doctors = Doctor.objects.get(slug=slug)
-    id = doctors.id  # This id is doctor table's doctor id
+    id = doctors.id
     doctor = Doctor.objects.filter(slug = slug)
-
+    
     if doctor.exists():
         doctor = doctor.first()
     else:
         return redirect(request,'error/404.html')
-    
+
     patient_id = request.user.id
 
     review_filter = Review.objects.filter(doctor_id=id)
+
+    aggregated_review = Review.objects.filter(doctor=doctor).aggregate(
+        average_rating=Avg('rating'),
+        total_reviews=Count('id')
+    )
 
     # For Patient :
     user = User.objects.filter(last_name = 'Patient').order_by('id')
 
     # For Doctor Schedule
     schedule = Schedule.objects.filter(doctor_id = id)
-
+    
     context = {
         'review': review_filter,
         'user' : user,
         'doctor' : doctor,
+        'aggregated_review': aggregated_review,
         'schedule' : schedule,
     }
-    
+
     if request.method == 'POST' and patient_id is not None:
         rating = request.POST.get('rating')
         review_text = request.POST.get('review_text')
 
-        patient_id = request.user.id
+        patient = request.user.patient
+        patient_id = patient.id
    
         review = Review(
                 rating=rating,
@@ -367,27 +410,6 @@ def DOCTOR_PROFILE_SETTINGS(request):
 
     return render(request,'main/doctor-profile-settings.html',context)
 
-# Filter Data
-def filter_data(request):
-    genders = request.GET.getlist('gender[]')
-    specializations = request.GET.getlist('specialization[]')
-    user = User.objects.filter(last_name='Doctor')
-
-    # Filter based on genders if genders are provided
-    if genders:
-        user = user.filter(doctor__gender__id__in=genders)
-    
-    # Filter based on specializations if specializations are provided
-    if specializations:
-        user = user.filter(doctor__specialization__id__in=specializations)
-
-    # Order the queryset by ID
-    user = user.order_by('id')
-
-    t = render_to_string('ajax/doctor-list.html', {'user': user})
-
-    return JsonResponse({'data': t})
-
 def REVIEWS(request):
     doctorid = request.user.id
     doctor = Doctor.objects.get(user_id=doctorid)
@@ -396,7 +418,7 @@ def REVIEWS(request):
     review_filter = Review.objects.filter(doctor_id=id)
 
     # For Patient :
-    patient = User.objects.filter(last_name = 'Patient').order_by('id')
+    patient = Patient.objects.all().order_by('id')
 
     context = {
         'review': review_filter,
