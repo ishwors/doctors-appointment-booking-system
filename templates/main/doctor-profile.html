@@ -23,14 +23,14 @@
 		
 		<!-- Main CSS -->
 		<link rel="stylesheet" href="{% static 'client-assets/css/style.css'%}">
-		
-		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-		<!--[if lt IE 9]>
-			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
-			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
-		<![endif]-->
 
 		<style>
+			.comment-body {
+				width: 1100px;
+			}
+			.comment-content {
+				word-break: break-word;
+			}
 			.time-slot ul {
 				display: flex;
 				justify-content: space-between;
@@ -42,6 +42,12 @@
 				flex-basis: 14%;
 			}
 		</style>
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
+			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
+		<![endif]-->
 	
 	</head>
 	<body>
@@ -88,12 +94,12 @@
 										<p class="doc-speciality">{{doctor.degree}} - {{doctor.designation}}</p>
 										<h5 class="doc-department">{{doctor.specialization}}</h5>
 										<div class="rating">
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star filled"></i>
-											<i class="fas fa-star"></i>
-											<span class="d-inline-block average-rating">(35)</span>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+											<span class="d-inline-block average-rating">({{ aggregated_review.total_reviews }})</span>
 										</div>
 										<div class="clinic-details">
 											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</p>
@@ -320,13 +326,13 @@
 											<li>
 												<div class="comment">
 													{% for u in user %}
-														{% if u.id == i.patient_id %}<img class="avatar avatar-sm rounded-circle" src="{{u.patient.profile_pic.url}}">{% endif %}
+														{% if u.patient.id == i.patient_id %}<img class="avatar avatar-sm rounded-circle" src="{{u.patient.profile_pic.url}}">{% endif %}
 													{% endfor %}
 													<div class="comment-body">
 														<div class="meta-data">
 															{% for u in user %}
 															<span class="comment-author">
-																{% if u.id == i.patient_id %}{{u.first_name}}{% endif %}
+																{% if u.patient.id == i.patient_id %}{{u.first_name}}{% endif %}
 															</span>
 															{% endfor %}
 
@@ -342,13 +348,17 @@
 															{{i.review_text}}
 														</p>
 													</div>
+													
 												</div>
+												
 											</li>
+											
 											<!-- /Comment List -->
 											{% endfor %}
 										</ul>
 									</div>
 									<!-- /Review Listing -->
+									
 								
 									<!-- Write Review -->
 									<div class="write-review">

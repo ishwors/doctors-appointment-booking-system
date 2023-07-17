@@ -169,12 +169,12 @@
 									</h3>
 									<p class="speciality">{{i.degree}} - {{i.designation}}</p>
 									<div class="rating">
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<i class="fas fa-star filled"></i>
-										<span class="d-inline-block average-rating">(17)</span>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+										<span class="d-inline-block average-rating">({{ i.aggregated_review.total_reviews }})</span>
 									</div>
 									<ul class="available-info">
 										<li>
