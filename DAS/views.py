@@ -9,11 +9,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
 from .forms import CustomPasswordChangeForm
-from app.models import Doctor, Gender, Patient, Review, Specialization, Schedule, Timing
+from app.models import Booking, Doctor, Gender, Patient, Review, Specialization, Schedule, Timing
 from django.template.loader import render_to_string
 from django.db.models import Q
 from django.template.defaultfilters import date as format_date
 from django.db.models import Avg, Count
+from dateutil import parser
 
 
 from DAS import email_backend
@@ -482,6 +483,10 @@ def BOOKING(request,slug):
         doctors = Doctor.objects.get(slug=slug)
         id = doctors.id  # This id is doctor table's doctor id
         doctor = Doctor.objects.filter(slug = slug)
+        
+        patientid = request.user.id
+        patient = Patient.objects.get(user_id = patientid)
+        pat_id = patient.id
 
         if doctor.exists():
             doctor = doctor.first()
@@ -500,18 +505,24 @@ def BOOKING(request,slug):
             # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
             day_of_week = date_obj.strftime('%A').lower()
 
-            
             schedule = Schedule.objects.filter(doctor_id = id)
-            value = schedule.filter(day = day_of_week)
+            value = schedule.filter(day = day_of_week) # value has all schedules of a perticuler day
+
+            # Get the booked schedule IDs for the selected date
+            booked_schedule_ids = Booking.objects.filter(date=date, doctor_id=id, patient_id=pat_id).values_list('schedule_id', flat=True)
+
+            # Exclude the booked schedules from the value queryset
+            filtered_value = value.exclude(id__in=booked_schedule_ids)
+
 
             context = {
-            'value' : value,
+            'value' : filtered_value,
             'date' : date,
             'doctor' : doctor,
             'schedule' : schedule,
             }
 
-            # check username
+            # check Date
             if not value.exists():
                 messages.warning(request, 'No schedule available for the selected date !')
                 return render(request,'main/booking.html',context)
@@ -557,6 +568,51 @@ def CHECKOUT(request,slug):
         }
 
     return render(request,'main/checkout.html',context)
+
+def PATIENT_BOOKING(request):
+    if request.method == "POST":
+        user = request.user.id
+        patient = Patient.objects.get(user_id=user)
+        patient_id = patient.id
+
+        doctor_id = request.POST.get('doc_id')
+        doctor = Doctor.objects.get(id = doctor_id)
+
+        date_str = request.POST.get('date')
+        date = parser.parse(date_str).date()
+
+        # Convert the date string to a datetime object
+        date_obj = datetime.datetime.strptime(date_str, '%d %b %Y')
+
+        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
+        day_of_week = date_obj.strftime('%A').lower()
+
+        time_id = request.POST.get('time')
+        time = Timing.objects.get(id = time_id)
+
+        schedule = Schedule.objects.filter(doctor_id = doctor_id, timing = time_id, day = day_of_week).first()
+        schedule_id = schedule.id
+
+        booking = Booking(
+            patient_id = patient_id,
+            doctor_id = doctor_id,
+            timing_id = time_id,
+            schedule_id = schedule_id,
+            date = date,
+            status = "Pending"
+        )
+
+        booking.save()
+
+        context = {
+            'doctor': doctor,
+            'date': date,
+            'time' : time,
+        }
+
+        return render(request,'main/booking-success.html',context)
+
+
    
 
 

@@ -45,6 +45,7 @@ urlpatterns = [
     path('schedule-timings', views.SCHEDULE_TIMINGS, name='schedule-timings'),
     path('doctor-schedule', views.DOCTOR_SCHEDULE, name='doctor-schedule'),
     path('checkout/<slug:slug>', views.CHECKOUT, name='checkout'),
+    path('patient-booking>', views.PATIENT_BOOKING, name='patient-booking'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

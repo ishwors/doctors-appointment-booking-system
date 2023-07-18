@@ -65,43 +65,11 @@
 								<div class="card-body">
 								
 									<!-- Checkout Form -->
-									<form action="https://dreamguys.co.in/demo/doccure/booking-success.html">
+									<form action="{{doctor.payment_url}}" method="POST">
+										{% csrf_token %}
 									
 										<!-- Personal Information -->
 										<div class="info-widget">
-											<h4 class="card-title">Personal Information</h4>
-											<div class="row">
-												<div class="col-md-6 col-sm-12">
-													<div class="form-group card-label">
-														<label>Full Name</label>
-														<input class="form-control" type="text" value="{{user.first_name}}" required>
-													</div>
-												</div>
-												<div class="col-md-6 col-sm-12">
-													<div class="form-group card-label">
-														<label>Email</label>
-														<input class="form-control" type="email"  value="{{user.email}}" required>
-													</div>
-												</div>
-												<div class="col-md-6 col-sm-12">
-													<div class="form-group card-label">
-														<label>Phone</label>
-														<input class="form-control" type="number"  value="{{user.patient.mobile}}" required>
-													</div>
-												</div>
-												<div class="col-md-6 col-sm-12">
-													<div class="form-group card-label">
-														<label>Address</label>
-														<input class="form-control" type="text" value="{{user.patient.address}}" required>
-													</div>
-												</div>
-											</div>
-										</div>
-										<!-- /Personal Information -->
-										
-										<div class="payment-widget">
-											<h4 class="card-title">Payment Method</h4>
-											
 											<!-- Credit Card Payment -->
 											<div class="payment-list">
 												<label class="payment-radio credit-card-option">
@@ -162,17 +130,42 @@
 												</div>
 											</div>
 											<!-- /Terms Accept -->
+										</div>
+										<!-- /Personal Information -->
+
+										<div class="payment-widget">
+											<h4 class="card-title">Payment Method</h4>
 											
 											<!-- Submit Section -->
-											<div class="submit-section mt-4">
-												<button type="submit" class="btn btn-primary submit-btn">Confirm and Pay</button>
-											</div>
-											<!-- /Submit Section -->
-											
-										</div>
+											<div class="row submit-section mt-4">
+												<div class="col-md-4 col-sm-12">
+													<div class="form-group">
+														<button type="submit" class="btn btn-primary submit-btn w-100" >Confirm Booking</button>
+													</div>
+												</div>
 									</form>
-									<!-- /Checkout Form -->
-									
+													
+												<div class="col-md-4 col-sm-12">
+													<div class="form-group">
+														<form action="{% url 'patient-booking' %}" method="POST">
+															{% csrf_token %}
+															<input type="hidden" value="{{doctor.id}}" name="doc_id">
+															<input type="hidden" value="{{date}}" name="date">
+															<input type="hidden" value="{{time.id}}" name="time">
+													  		<button type="submit" class="btn btn-primary submit-btn w-100">Reserve Booking </button>
+														</form>
+													</div>
+												  </div>
+
+												  <div class="col-md-4 col-sm-12">
+													<div class="form-group">
+														<a href="{% url 'search' %}" class="btn btn-primary submit-btn w-100">Cancel</a>
+													</div>
+												</div>
+											</div>
+
+											<!-- /Submit Section -->
+										</div>
 								</div>
 							</div>
 							

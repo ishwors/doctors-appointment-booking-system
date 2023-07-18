@@ -5,6 +5,7 @@ from .models import *
 admin.site.register(Patient)
 admin.site.register(Doctor)
 admin.site.register(Gender)
+admin.site.register(Specialization)
 admin.site.register(Review)
-admin.site.register(Slot)
 admin.site.register(Timing)
+admin.site.register(Booking)

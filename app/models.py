@@ -110,25 +110,27 @@ class Review(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE , null=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE , null=True)
 
-# Slot
-class Slot(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    available = models.BooleanField(default=True)
-    date = models.DateField()
-
 # Timing
 class Timing(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-# Associative
+# Schedule
 class Schedule(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     timing = models.ForeignKey(Timing, on_delete=models.CASCADE)
     day = models.CharField(max_length=15, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+# Booking
+class Booking(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE , null=True)
+    timing = models.ForeignKey(Timing, on_delete=models.CASCADE , null=True)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE , null=True)
+    date = models.DateField(null=True)
+    status = models.CharField(max_length=15, null=True)
+    
 
 
