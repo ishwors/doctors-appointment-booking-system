@@ -73,30 +73,29 @@
 											<div class="row">
 												<div class="col-md-6 col-sm-12">
 													<div class="form-group card-label">
-														<label>First Name</label>
-														<input class="form-control" type="text">
-													</div>
-												</div>
-												<div class="col-md-6 col-sm-12">
-													<div class="form-group card-label">
-														<label>Last Name</label>
-														<input class="form-control" type="text">
+														<label>Full Name</label>
+														<input class="form-control" type="text" value="{{user.first_name}}" required>
 													</div>
 												</div>
 												<div class="col-md-6 col-sm-12">
 													<div class="form-group card-label">
 														<label>Email</label>
-														<input class="form-control" type="email">
+														<input class="form-control" type="email"  value="{{user.email}}" required>
 													</div>
 												</div>
 												<div class="col-md-6 col-sm-12">
 													<div class="form-group card-label">
 														<label>Phone</label>
-														<input class="form-control" type="text">
+														<input class="form-control" type="number"  value="{{user.patient.mobile}}" required>
+													</div>
+												</div>
+												<div class="col-md-6 col-sm-12">
+													<div class="form-group card-label">
+														<label>Address</label>
+														<input class="form-control" type="text" value="{{user.patient.address}}" required>
 													</div>
 												</div>
 											</div>
-											<div class="exist-customer">Existing Customer? <a href="#">Click here to login</a></div>
 										</div>
 										<!-- /Personal Information -->
 										
@@ -190,21 +189,21 @@
 								
 									<!-- Booking Doctor Info -->
 									<div class="booking-doc-info">
-										<a href="doctor-profile.html" class="booking-doc-img">
-											<img src="{% static 'client-assets/img/doctors/doctor-thumb-02.jpg'%}" alt="User Image">
+										<a href="{{doctor.get_profile_url}}" class="booking-doc-img">
+											<img src="{{doctor.profile_pic.url}}" alt="User Image">
 										</a>
 										<div class="booking-info">
-											<h4><a href="doctor-profile.html">Dr. Darren Elder</a></h4>
+											<h4><a href="{{doctor.get_profile_url}}">Dr. {{doctor.user.first_name}}</a></h4>
 											<div class="rating">
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star filled"></i>
-												<i class="fas fa-star"></i>
-												<span class="d-inline-block average-rating">35</span>
+												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+												<span class="d-inline-block average-rating">({{ doctor.aggregated_review.total_reviews }})</span>
 											</div>
 											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> Newyork, USA</p>
+												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</p>
 											</div>
 										</div>
 									</div>
@@ -218,15 +217,13 @@
 												<li>End Time <span>{{time.end_time}}</span></li>
 											</ul>
 											<ul class="booking-fee">
-												<li>Consulting Fee <span>$100</span></li>
-												<li>Booking Fee <span>$10</span></li>
-												<li>Video Call <span>$50</span></li>
+												<li>Booking Fee <span>Rs {{doctor.pricing}}</span></li>
 											</ul>
 											<div class="booking-total">
 												<ul class="booking-total-list">
 													<li>
 														<span>Total</span>
-														<span class="total-cost">$160</span>
+														<span class="total-cost">Rs {{doctor.pricing}}</span>
 													</li>
 												</ul>
 											</div>

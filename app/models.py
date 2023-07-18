@@ -60,6 +60,9 @@ class Doctor(models.Model):
     def get_booking_url(self):
         return reverse("booking", kwargs={'slug': self.slug})
     
+    def get_checkout_url(self):
+        return reverse("checkout", kwargs={'slug': self.slug})
+    
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

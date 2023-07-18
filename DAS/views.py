@@ -106,19 +106,22 @@ def filter_data(request):
 def index_search(request):
     q=request.GET['search']
     
-    user = User.objects.filter(last_name = 'Doctor')
-    user = user.filter(Q(doctor__address__icontains=q) 
-                       | Q(doctor__clinic_name__icontains=q) 
-                       | Q(doctor__clinic_address__icontains=q) 
-                       | Q(first_name__icontains=q) 
-                       | Q(doctor__gender__title__icontains=q) 
-                       | Q(doctor__specialization__title__icontains=q)) .order_by('id')
+    doctors = Doctor.objects.all().order_by('id')
+    doctors = doctors.filter(Q(address__icontains=q) 
+                       | Q(clinic_name__icontains=q) 
+                       | Q(clinic_address__icontains=q) 
+                       | Q(user__first_name__icontains=q) 
+                       | Q(gender__title__icontains=q) 
+                       | Q(specialization__title__icontains=q)) .order_by('id')
+    
+    for doctor in doctors:
+        doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
 
     gender = Gender.objects.all().order_by('id')
     specialization = Specialization.objects.all().order_by('id')
 
     context = { 
-        'user':user,    
+        'doctors':doctors,    
         'gender':gender,
         'specialization':specialization,
     }
@@ -484,6 +487,8 @@ def BOOKING(request,slug):
             doctor = doctor.first()
         else:
             return redirect(request,'error/404.html')
+        
+        doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
 
         # For Time
         if request.method == "POST": 
@@ -506,6 +511,11 @@ def BOOKING(request,slug):
             'schedule' : schedule,
             }
 
+            # check username
+            if not value.exists():
+                messages.warning(request, 'No schedule available for the selected date !')
+                return render(request,'main/booking.html',context)
+
             return render(request,'main/booking.html',context)
 
         # For Date
@@ -516,28 +526,34 @@ def BOOKING(request,slug):
         return render(request,'main/booking.html',context)
     return redirect('login')
 
-def CHECKOUT(request):
+def CHECKOUT(request,slug):
     if request.method == "POST":
+        user_id = request.user.id
+        patient = User.objects.get(id=user_id)
         date = request.POST.get('date')
         time_id = request.POST.get('time')
+        doctor = Doctor.objects.filter(slug = slug)
+
+        if doctor.exists():
+            doctor = doctor.first()
+        else:
+            return redirect(request,'error/404.html')
         
         # Convert the date string to a datetime object
         date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
-
-        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
-        day_of_week = date_obj.strftime('%A').lower()
-
-        value = Schedule.objects.filter(day = day_of_week)
-
         formatted_date = format_date(date_obj, 'd M Y')
 
         # Getting time from time id
         time = Timing.objects.get(id = time_id)
 
+        doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
+        
         
         context = {
             'date' : formatted_date,
             'time' : time,
+            'doctor' : doctor,
+            'user' : patient,
         }
 
     return render(request,'main/checkout.html',context)
