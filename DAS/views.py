@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.template.defaultfilters import date as format_date
 from django.db.models import Avg, Count
 from dateutil import parser
+import requests as req
 
 
 from DAS import email_backend
@@ -611,7 +612,36 @@ def PATIENT_BOOKING(request):
         }
 
         return render(request,'main/booking-success.html',context)
+    
+def EsewaRequestView(request):
+    if request.method == "POST":
+        context = {
 
+        }
+
+        return render(request,'main/esewa-request.html',context)
+    
+def EsewaVerifyView(request):
+
+        amt = request.GET.get("amt")
+        refId = request.GET.get("refId")
+
+        url ="https://uat.esewa.com.np/epay/transrec"
+        d = {
+            'amt': amt,
+            'scd': 'EPAYTEST',
+            'rid': refId,
+            'pid':'ee2c3ca1-696b-4cc5-a6be-2c40d929d453',
+        }
+        
+        resp = req.post(url, d)
+        print(resp.text)
+
+        context = {
+
+        }
+
+        return render(request,'main/esewa-request.html',context)
 
    
 

@@ -26,6 +26,12 @@
 			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
 			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
 		<![endif]-->
+
+		<style>
+			.info-widget{
+				padding-bottom: 0px;
+			}
+		</style>
 	
 	</head>
 	<body>
@@ -57,180 +63,107 @@
 			
 			<!-- Page Content -->
 			<div class="content">
-				<div class="container">
-
-					<div class="row">
-						<div class="col-md-7 col-lg-8">
-							<div class="card">
-								<div class="card-body">
-								
-									<!-- Checkout Form -->
-									<form action="{{doctor.payment_url}}" method="POST">
-										{% csrf_token %}
-									
-										<!-- Personal Information -->
-										<div class="info-widget">
-											<!-- Credit Card Payment -->
-											<div class="payment-list">
-												<label class="payment-radio credit-card-option">
-													<input type="radio" name="radio" checked>
-													<span class="checkmark"></span>
-													Credit card
-												</label>
-												<div class="row">
-													<div class="col-md-6">
-														<div class="form-group card-label">
-															<label for="card_name">Name on Card</label>
-															<input class="form-control" id="card_name" type="text">
-														</div>
-													</div>
-													<div class="col-md-6">
-														<div class="form-group card-label">
-															<label for="card_number">Card Number</label>
-															<input class="form-control" id="card_number" placeholder="1234  5678  9876  5432" type="text">
-														</div>
-													</div>
-													<div class="col-md-4">
-														<div class="form-group card-label">
-															<label for="expiry_month">Expiry Month</label>
-															<input class="form-control" id="expiry_month" placeholder="MM" type="text">
-														</div>
-													</div>
-													<div class="col-md-4">
-														<div class="form-group card-label">
-															<label for="expiry_year">Expiry Year</label>
-															<input class="form-control" id="expiry_year" placeholder="YY" type="text">
-														</div>
-													</div>
-													<div class="col-md-4">
-														<div class="form-group card-label">
-															<label for="cvv">CVV</label>
-															<input class="form-control" id="cvv" type="text">
-														</div>
-													</div>
-												</div>
-											</div>
-											<!-- /Credit Card Payment -->
-											
-											<!-- Paypal Payment -->
-											<div class="payment-list">
-												<label class="payment-radio paypal-option">
-													<input type="radio" name="radio">
-													<span class="checkmark"></span>
-													Paypal
-												</label>
-											</div>
-											<!-- /Paypal Payment -->
-											
-											<!-- Terms Accept -->
-											<div class="terms-accept">
-												<div class="custom-checkbox">
-												   <input type="checkbox" id="terms_accept">
-												   <label for="terms_accept">I have read and accept <a href="#">Terms &amp; Conditions</a></label>
-												</div>
-											</div>
-											<!-- /Terms Accept -->
-										</div>
-										<!-- /Personal Information -->
-
-										<div class="payment-widget">
-											<h4 class="card-title">Payment Method</h4>
-											
-											<!-- Submit Section -->
-											<div class="row submit-section mt-4">
-												<div class="col-md-4 col-sm-12">
-													<div class="form-group">
-														<button type="submit" class="btn btn-primary submit-btn w-100" >Confirm Booking</button>
-													</div>
-												</div>
-									</form>
-													
-												<div class="col-md-4 col-sm-12">
-													<div class="form-group">
-														<form action="{% url 'patient-booking' %}" method="POST">
-															{% csrf_token %}
-															<input type="hidden" value="{{doctor.id}}" name="doc_id">
-															<input type="hidden" value="{{date}}" name="date">
-															<input type="hidden" value="{{time.id}}" name="time">
-													  		<button type="submit" class="btn btn-primary submit-btn w-100">Reserve Booking </button>
-														</form>
-													</div>
-												  </div>
-
-												  <div class="col-md-4 col-sm-12">
-													<div class="form-group">
-														<a href="{% url 'search' %}" class="btn btn-primary submit-btn w-100">Cancel</a>
-													</div>
-												</div>
-											</div>
-
-											<!-- /Submit Section -->
-										</div>
-								</div>
-							</div>
+				<div class="container d-flex justify-content-center align-items-center">
+					<div class="card w-75">
+						<div class="card-body">
+						
+							<!-- Checkout Form -->
+							<form action="{% url 'esewa-request' %}" method="POST">
+								{% csrf_token %}
 							
-						</div>
-						
-						<div class="col-md-5 col-lg-4 theiaStickySidebar">
-						
-							<!-- Booking Summary -->
-							<div class="card booking-card">
-								<div class="card-header">
-									<h4 class="card-title">Booking Summary</h4>
-								</div>
-								<div class="card-body">
-								
-									<!-- Booking Doctor Info -->
-									<div class="booking-doc-info">
-										<a href="{{doctor.get_profile_url}}" class="booking-doc-img">
-											<img src="{{doctor.profile_pic.url}}" alt="User Image">
-										</a>
-										<div class="booking-info">
-											<h4><a href="{{doctor.get_profile_url}}">Dr. {{doctor.user.first_name}}</a></h4>
-											<div class="rating">
-												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
-												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
-												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
-												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
-												<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
-												<span class="d-inline-block average-rating">({{ doctor.aggregated_review.total_reviews }})</span>
+								<!-- Personal Information -->
+								<div class="info-widget">
+									<!-- Booking Summary -->
+									<div class="card booking-card w-100">
+										<div class="card-header">
+											<h4 class="card-title">Booking Summary</h4>
+										</div>
+										<div class="card-body">
+										
+											<!-- Booking Doctor Info -->
+											<div class="booking-doc-info">
+												<a href="{{doctor.get_profile_url}}" class="booking-doc-img">
+													<img src="{{doctor.profile_pic.url}}" alt="User Image">
+												</a>
+												<div class="booking-info">
+													<h4><a href="{{doctor.get_profile_url}}">Dr. {{doctor.user.first_name}}</a></h4>
+													<div class="rating">
+														<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if doctor.aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+														<span class="d-inline-block average-rating">({{ doctor.aggregated_review.total_reviews }})</span>
+													</div>
+													<div class="clinic-details">
+														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</p>
+													</div>
+												</div>
 											</div>
-											<div class="clinic-details">
-												<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</p>
+											<!-- Booking Doctor Info -->
+											
+											<div class="booking-summary">
+												<div class="booking-item-wrap">
+													<ul class="booking-date">
+														<li>Date <span>{{date}}</span></li>
+														<li>Start Time <span>{{time.start_time}}</span></li>
+														<li>End Time <span>{{time.end_time}}</span></li>
+													</ul>
+													<ul class="booking-fee">
+														<li>Booking Fee <span>Rs {{doctor.pricing}}</span></li>
+													</ul>
+													<div class="booking-total">
+														<ul class="booking-total-list">
+															<li>
+																<span>Total</span>
+																<span class="total-cost">Rs {{doctor.pricing}}</span>
+															</li>
+														</ul>
+													</div>
+												</div>
 											</div>
 										</div>
 									</div>
-									<!-- Booking Doctor Info -->
+									<!-- /Booking Summary -->
+								</div>
+								<!-- /Personal Information -->
+
+								<div class="payment-widget">
+									<h4 class="card-title">Payment Method</h4>
 									
-									<div class="booking-summary">
-										<div class="booking-item-wrap">
-											<ul class="booking-date">
-												<li>Date <span>{{date}}</span></li>
-												<li>Start Time <span>{{time.start_time}}</span></li>
-												<li>End Time <span>{{time.end_time}}</span></li>
-											</ul>
-											<ul class="booking-fee">
-												<li>Booking Fee <span>Rs {{doctor.pricing}}</span></li>
-											</ul>
-											<div class="booking-total">
-												<ul class="booking-total-list">
-													<li>
-														<span>Total</span>
-														<span class="total-cost">Rs {{doctor.pricing}}</span>
-													</li>
-												</ul>
+									<!-- Submit Section -->
+									<div class="row submit-section mt-4">
+										<div class="col-md-4 col-sm-12">
+											<div class="form-group">
+												<button class="btn btn-primary submit-btn w-100" >Pay with E-Sewa</button>
+											</div>
+										</div>
+							</form>
+											
+										<div class="col-md-4 col-sm-12">
+											<div class="form-group">
+												<form action="{% url 'patient-booking' %}" method="POST">
+													{% csrf_token %}
+													<input type="hidden" value="{{doctor.id}}" name="doc_id">
+													<input type="hidden" value="{{date}}" name="date">
+													<input type="hidden" value="{{time.id}}" name="time">
+													<button type="submit" class="btn btn-primary submit-btn w-100">Reserve Booking </button>
+												</form>
+											</div>
+											</div>
+
+											<div class="col-md-4 col-sm-12">
+											<div class="form-group">
+												<a href="{% url 'search' %}" class="btn btn-primary submit-btn w-100">Cancel</a>
 											</div>
 										</div>
 									</div>
+
+									<!-- /Submit Section -->
 								</div>
-							</div>
-							<!-- /Booking Summary -->
-							
 						</div>
 					</div>
-
 				</div>
-
 			</div>		
 			<!-- /Page Content -->
    
