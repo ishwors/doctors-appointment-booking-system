@@ -1,15 +1,27 @@
 
+import datetime
+from multiprocessing import context
 from django.contrib.auth.decorators import login_required
-from django.forms import SlugField
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import PasswordChangeView
 from django.urls import reverse_lazy
-
 from .forms import CustomPasswordChangeForm
-from app.models import Doctor, Patient, Review
+from app.models import Doctor, Gender, Patient, Review, Specialization, Schedule, Timing
+from django.template.loader import render_to_string
+from django.db.models import Q
+from django.template.defaultfilters import date as format_date
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.utils.crypto import get_random_string
 
 from DAS import email_backend
 
@@ -47,46 +59,107 @@ def LOGOUT(request):
 
 def SEARCH(request):
     user = User.objects.filter(last_name = 'Doctor').order_by('id')
-    return render(request, 'main/search.html', {'user': user})
+    gender = Gender.objects.all().order_by('id')
+    specialization = Specialization.objects.all().order_by('id')
 
-def DOCTOR_PROFILE(request,slug ):
+    context = { 
+        'user':user,    
+        'gender':gender,
+        'specialization':specialization,
+    }
+
+    return render(request, 'main/search.html',context)
+
+def index_search(request):
+    q=request.GET['search']
     
+    user = User.objects.filter(last_name = 'Doctor')
+    user = user.filter(Q(doctor__address__icontains=q) 
+                       | Q(doctor__clinic_name__icontains=q) 
+                       | Q(doctor__clinic_address__icontains=q) 
+                       | Q(first_name__icontains=q) 
+                       | Q(doctor__gender__title__icontains=q) 
+                       | Q(doctor__specialization__title__icontains=q)) .order_by('id')
+
+    gender = Gender.objects.all().order_by('id')
+    specialization = Specialization.objects.all().order_by('id')
+
+    context = { 
+        'user':user,    
+        'gender':gender,
+        'specialization':specialization,
+    }
+
+    return render(request, 'main/search.html',context)
+
+def autocomplete(request):
+    if 'term' in request.GET:
+        user = User.objects.filter(last_name='Doctor')
+        search_term = request.GET.get('term')
+
+        users = user.filter(
+            Q(first_name__icontains=search_term)
+            | Q(doctor__clinic_name__icontains=search_term)
+            | Q(doctor__clinic_address__icontains=search_term)
+        )
+
+        titles = [f"{user.first_name}" for user in users]
+        titles += [f"{user.doctor.clinic_name}" for user in users]
+        titles += [f"{user.doctor.clinic_address}" for user in users]
+
+
+        return JsonResponse(titles, safe=False)
+
+    return render(request, 'main/search.html')
+
+def DOCTOR_PROFILE(request,slug):
     doctors = Doctor.objects.get(slug=slug)
-    id_doctor = doctors.id
+    id = doctors.id  # This id is doctor table's doctor id
     doctor = Doctor.objects.filter(slug = slug)
+
     if doctor.exists():
         doctor = doctor.first()
     else:
         return redirect(request,'error/404.html')
     
-    review = Review.objects.filter(doctor_id = id_doctor)
-    
+    patient_id = request.user.id
+
+    review_filter = Review.objects.filter(doctor_id=id)
+
+    # For Patient :
+    user = User.objects.filter(last_name = 'Patient').order_by('id')
+
+    # For Doctor Schedule
+    schedule = Schedule.objects.filter(doctor_id = id)
+
     context = {
-        # 'doctor': doctor,
-        'review': review
+        'review': review_filter,
+        'user' : user,
+        'doctor' : doctor,
+        'schedule' : schedule,
     }
     
-    if request.method == 'POST':
+    if request.method == 'POST' and patient_id is not None:
         rating = request.POST.get('rating')
         review_text = request.POST.get('review_text')
 
-        user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        patient = request.user.patient
-        patient_id = patient.id
+        patient_id = request.user.id
    
         review = Review(
                 rating=rating,
                 review_text=review_text,
                 patient_id=patient_id,
-                doctor_id= id_doctor,
+                doctor_id= id,
             )
-         
          
         review.save()
         return redirect('doctor-profile', slug=doctor.slug)
+    
+    elif request.method == 'POST' and patient_id is None:
+        return redirect('login')
+        # Note : Please login to write review message needs to be displayed
+        
     return render(request, 'main/doctor-profile.html', context)
-
 
 def register(request):
     if request.method == "POST":
@@ -227,7 +300,7 @@ def PROFILE_SETTINGS(request):
 
 def DOCTOR_PROFILE_SETTINGS(request):
     if request.method == "POST":
-        image = request.POST.get('image')
+        image = request.FILES.get('image')
         username = request.POST.get('username')
         fname = request.POST.get('fname')
         email = request.POST.get('email')
@@ -250,7 +323,11 @@ def DOCTOR_PROFILE_SETTINGS(request):
         doctor = user.doctor
         
     # To update existing records
-        doctor.profile_pic = image
+        if image is None:
+            doctor.profile_pic = doctor.profile_pic
+        else:
+            doctor.profile_pic = image
+        
         doctor.dob = dob
         doctor.mobile = mobile
         doctor.address = address
@@ -273,4 +350,242 @@ def DOCTOR_PROFILE_SETTINGS(request):
 
         return render(request,'main/doctor-profile-settings.html')
     return render(request,'main/doctor-profile-settings.html')
+
+# Filter Data
+def filter_data(request):
+    genders = request.GET.getlist('gender[]')
+    specializations = request.GET.getlist('specialization[]')
+    user = User.objects.filter(last_name='Doctor')
+
+    # Filter based on genders if genders are provided
+    if genders:
+        user = user.filter(doctor__gender__id__in=genders)
+    
+    # Filter based on specializations if specializations are provided
+    if specializations:
+        user = user.filter(doctor__specialization__id__in=specializations)
+
+    # Order the queryset by ID
+    user = user.order_by('id')
+
+    t = render_to_string('ajax/doctor-list.html', {'user': user})
+
+    return JsonResponse({'data': t})
+
+def REVIEWS(request):
+    doctorid = request.user.id
+    doctor = Doctor.objects.get(user_id=doctorid)
+    id = doctor.id
+
+    review_filter = Review.objects.filter(doctor_id=id)
+
+    # For Patient :
+    patient = User.objects.filter(last_name = 'Patient').order_by('id')
+
+    context = {
+        'review': review_filter,
+        'patient' : patient,
+    }
+
+    return render(request, 'main/reviews.html', context)
+
+def SCHEDULE_TIMINGS(request):
+    doctorid = request.user.id
+    doctor = Doctor.objects.get(user_id=doctorid)
+    id = doctor.id
+
+    schedule = Schedule.objects.filter(doctor_id = id)   
+
+    context = {
+        'schedule' : schedule,
+    }
+
+    return render(request, 'main/schedule-timings.html', context)
+
+def DOCTOR_SCHEDULE(request):
+    doctorid = request.user.id
+    doctor = Doctor.objects.get(user_id=doctorid)
+    id = doctor.id
+
+    if request.method == "POST":
+        day = request.POST.get('day')
+        time = request.POST.getlist('time')
+
+        # Fetch existing schedule for the doctor
+        existing_schedule = Schedule.objects.filter(doctor_id=id)
+
+        # Update the schedule for the provided day
+        for schedule_entry in existing_schedule:
+            if schedule_entry.day == day and str(schedule_entry.timing_id) not in time:
+                # Unchecked schedule entry, delete it
+                schedule_entry.delete()
+
+        # Create or update the selected schedule entries
+        for data in time:
+            schedule_entry = existing_schedule.filter(day=day, timing_id=data).first()
+            if schedule_entry:
+                # Schedule entry exists, update the timing_id
+                schedule_entry.timing_id = data
+                schedule_entry.save()
+            else:
+                # Create a new schedule entry
+                schedule = Schedule(day=day, doctor_id=id, timing_id=data)
+                schedule.save()
+
+    return redirect('schedule-timings')
+
+@login_required(login_url="login")
+def BOOKING(request,slug):
+    if request.user.last_name == "Patient":
+
+        doctors = Doctor.objects.get(slug=slug)
+        id = doctors.id  # This id is doctor table's doctor id
+        doctor = Doctor.objects.filter(slug = slug)
+
+        if doctor.exists():
+            doctor = doctor.first()
+        else:
+            return redirect(request,'error/404.html')
+
+        # For Time
+        if request.method == "POST": 
+            date = request.POST.get('date')
+            
+            # Convert the date string to a datetime object
+            date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+
+            # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
+            day_of_week = date_obj.strftime('%A').lower()
+
+            
+            schedule = Schedule.objects.filter(doctor_id = id)
+            value = schedule.filter(day = day_of_week)
+
+            context = {
+            'value' : value,
+            'date' : date,
+            'doctor' : doctor,
+            'schedule' : schedule,
+            }
+
+            return render(request,'main/booking.html',context)
+
+        # For Date
+        context = {
+            'doctor' : doctor,
+        }
+
+        return render(request,'main/booking.html',context)
+    return redirect('login')
+
+def CHECKOUT(request):
+    if request.method == "POST":
+        date = request.POST.get('date')
+        time_id = request.POST.get('time')
+        
+        # Convert the date string to a datetime object
+        date_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+
+        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
+        day_of_week = date_obj.strftime('%A').lower()
+
+        value = Schedule.objects.filter(day = day_of_week)
+
+        formatted_date = format_date(date_obj, 'd M Y')
+
+        # Getting time from time id
+        time = Timing.objects.get(id = time_id)
+
+        
+        context = {
+            'date' : formatted_date,
+            'time' : time,
+        }
+
+    return render(request,'main/checkout.html',context)
+
+
+
+def FORGOT_PASSWORD(request):
+    
+     if request.method == 'POST':
+        email = request.POST['email']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request, 'User with this email does not exist.')
+            return render(request, 'forgot-password.html')
+
+        # Generate and send the reset password email
+        token = default_token_generator.make_token(user)
+        reset_url = f'http://127.0.0.1:8000/change-password/{user.pk}/{token}/'
+        send_mail(
+            'Password Reset',
+            f'Click the link to reset your password: {reset_url}',
+            'maknees321@gmail.com',  # Replace with your sender email
+            [email],
+            fail_silently=False,
+        )
+
+        messages.success(request, 'Password reset email sent. Please check your email.')
+        return redirect('login')  # Redirect to login page after sending the email
+
+     return render(request,'main/forgot-password.html')
+
+
+
+
+# def FORGET_PASSWORD(request):
+#     if request.method == 'POST':
+        
+#         email = request.POST ['email']
+#         send_mail (
+#             'Contract Form',
+#             message,
+#             'settings.EMAIL_HOST_USER',
+#             ['maknees321@gmail.com'],
+            
+#         )
+    # if request.method == 'POST':
+    #     email = request.POST['email']
+    #     try:
+    #         user = User.objects.get(email=email)
+    #     except User.DoesNotExist:
+    #         messages.error(request, 'User with this email does not exist.')
+    #         return render(request, 'forgot_password.html')
+
+    #     # Generate and send the reset password email
+    #     token = default_token_generator.make_token(user)
+    #     reset_url = f'http://your_domain/reset-password/{user.pk}/{token}/'
+    #     send_mail(
+    #         'Password Reset',
+    #         f'Click the link to reset your password: {reset_url}',
+    #         'sender@example.com',  # Replace with your sender email
+    #         [email],
+    #         fail_silently=False,
+    #     )
+
+    #     messages.success(request, 'Password reset email sent. Please check your email.')
+    #     return redirect('login')  # Redirect to login page after sending the email
+    # return render(request,'main/forget-password.html')
+
+
+# def  (request, uid, token):
+#     try:
+#         user = User.objects.get(pk=uid)
+#     except User.DoesNotExist:
+#         # Handle invalid user ID
+#         return render(request, '')
+
+#     if default_token_generator.check_token(user, token):
+#         # Show the reset password form
+#         return auth_views.PasswordResetConfirmView.as_view(
+#             template_name='',
+#             success_url='/login/',
+#         )(request, uidb64=uid, token=token)
+#     else:
+#         # Handle invalid token
+#         return render(request, '')
+
+
 

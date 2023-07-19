@@ -1,0 +1,63 @@
+<!-- FOR MONDAY -->
+<div class="row form-row">
+    <div class="col-12 col-md-12">
+            <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="customCheck1_thursday" value="1" name="time"> 
+                <label class="custom-control-label" for="customCheck1_thursday">10:00 am - 10:30 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck2_thursday" value="2" name="time">
+                <label class="custom-control-label" for="customCheck2_thursday">10:30 am - 11:00 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck3_thursday" value="3" name="time">
+                <label class="custom-control-label" for="customCheck3_thursday">11:00 am - 11:30 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck4_thursday" value="4" name="time">
+                <label class="custom-control-label" for="customCheck4_thursday">11:30 am - 12:00 am</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck5_thursday" value="5" name="time">
+                <label class="custom-control-label" for="customCheck5_thursday">1:00 pm - 1:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck6_thursday" value="6" name="time">
+                <label class="custom-control-label" for="customCheck6_thursday">1:30 pm - 2:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck7_thursday" value="7" name="time">
+                <label class="custom-control-label" for="customCheck7_thursday">2:00 pm - 2:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck8_thursday" value="8" name="time">
+                <label class="custom-control-label" for="customCheck8_thursday">2:30 pm - 3:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck9_thursday" value="9" name="time">
+                <label class="custom-control-label" for="customCheck9_thursday">3:00 pm - 3:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck10_thursday" value="10" name="time">
+                <label class="custom-control-label" for="customCheck10_thursday">3:30 pm - 4:00 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck11_thursday" value="11" name="time">
+                <label class="custom-control-label" for="customCheck11_thursday">4:00 pm - 4:30 pm</label>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+                <input type="checkbox" class="custom-control-input" id="customCheck12_thursday" value="12" name="time">
+                <label class="custom-control-label" for="customCheck12_thursday">4:30 pm - 5:00 pm</label>
+            </div>
+        
+        {% for i in schedule %}
+            {% if i.day == 'thursday' %}
+                <script>
+                    // Add the 'checked' attribute to the corresponding checkbox
+                    document.getElementById('customCheck{{ i.timing.id }}_thursday').checked = true;
+                </script>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+

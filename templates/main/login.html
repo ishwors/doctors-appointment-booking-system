@@ -26,6 +26,22 @@
 			<script src="assets/js/html5shiv.min.js"></script>
 			<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
+
+		<!-- To prevent user form pressing back button -->
+		<script>
+			window.onload = function() {
+				if (typeof history.pushState === 'function') {
+					history.pushState(null, null, location.href);
+					window.onpopstate = function () {
+						history.go(1);
+					};
+				} else {
+					window.onhashchange = function () {
+						window.location.hash = 'no-back';
+					};
+				}
+			};
+		</script>
 	
 	</head>
 	<body class="account-page">
@@ -65,7 +81,7 @@
 												<label class="focus-label">Password</label>
 											</div>
 											<div class="text-right">
-												<a class="forgot-link" href="forgot-password.html">Forgot Password ?</a>
+												<a class="forgot-link" href= "{% url 'forgot-password' %}">Forgot Password ?</a>
 											</div>
 											<button class="btn btn-primary btn-block btn-lg login-btn" type="submit">Login</button>
 											<div class="login-or">
