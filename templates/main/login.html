@@ -90,6 +90,12 @@
 											</span>
 											{% endif %}
 
+											{% if default_success_message %}
+												<div class="messages">
+													{{ default_success_message }}
+												</div>
+											{% endif %}
+
 											<div class="text-right">
 												<a class="forgot-link" href="{% url 'forgot-password' %}">Forgot Password ?</a>
 											</div>

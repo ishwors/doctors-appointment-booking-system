@@ -5,10 +5,10 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetDoneView
+from django.contrib.auth import login, logout
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
-from .forms import CustomPasswordChangeForm, CustomPasswordResetForm
+from .forms import CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm
 from app.models import Booking, Doctor, Gender, Patient, Review, Specialization, Schedule, Timing
 from django.template.loader import render_to_string
 from django.db.models import Q
@@ -16,10 +16,6 @@ from django.template.defaultfilters import date as format_date
 from django.db.models import Avg, Count
 from dateutil import parser
 import requests as req
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
-from django.contrib.auth import views as auth_views
-from django.views.generic.base import TemplateView
 
 
 from DAS import email_backend
@@ -41,12 +37,26 @@ class CustomPasswordResetView(PasswordResetView):
 
 class CustomPasswordResetDoneView(PasswordResetDoneView):
     template_name = 'main/forgot-password.html'
-    success_url = reverse_lazy('doctor-dashboard')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Manually add the default and custom success messages to the context
         context['default_success_message'] = "Password reset email has been sent."
+        return context
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    form_class = CustomPasswordResetConfirmForm
+    template_name = 'main/reset-password.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = 'main/login.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Manually add the default and custom success messages to the context
+        context['default_success_message'] = "Password reset complete. You can now log in with your new password."
         return context
 
 def index(request):
@@ -67,10 +77,6 @@ def DOCTOR_DASHBOARD(request):
         return render(request,'main/doctor-dashboard.html')
     
     return redirect('login')
-    
-
-def APPOINTMENTS(request):
-    return render(request,'main/appointments.html')
 
 def LOGIN(request):
     return render(request,'main/login.html')
