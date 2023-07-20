@@ -6,9 +6,9 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetDoneView
 from django.urls import reverse_lazy
-from .forms import CustomPasswordChangeForm
+from .forms import CustomPasswordChangeForm, CustomPasswordResetForm
 from app.models import Booking, Doctor, Gender, Patient, Review, Specialization, Schedule, Timing
 from django.template.loader import render_to_string
 from django.db.models import Q
@@ -16,6 +16,10 @@ from django.template.defaultfilters import date as format_date
 from django.db.models import Avg, Count
 from dateutil import parser
 import requests as req
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.contrib.auth import views as auth_views
+from django.views.generic.base import TemplateView
 
 
 from DAS import email_backend
@@ -30,6 +34,20 @@ class CustomDoctorPasswordChangeView(PasswordChangeView):
     template_name = 'main/doctor-change-password.html'
     success_url = reverse_lazy('doctor-dashboard')
 
+class CustomPasswordResetView(PasswordResetView):
+    form_class = CustomPasswordResetForm
+    template_name = 'main/forgot-password.html'
+    success_url = reverse_lazy('password_reset_done')
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    template_name = 'main/forgot-password.html'
+    success_url = reverse_lazy('doctor-dashboard')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Manually add the default and custom success messages to the context
+        context['default_success_message'] = "Password reset email has been sent."
+        return context
 
 def index(request):
     doctors = Doctor.objects.all().order_by('id')
@@ -540,8 +558,8 @@ def BOOKING(request,slug):
 
 def CHECKOUT(request,slug):
     if request.method == "POST":
-        user_id = request.user.id
-        patient = User.objects.get(id=user_id)
+        user = request.user.id
+        patient = Patient.objects.get(user_id=user)
         date = request.POST.get('date')
         time_id = request.POST.get('time')
         doctor = Doctor.objects.filter(slug = slug)
@@ -559,13 +577,25 @@ def CHECKOUT(request,slug):
         time = Timing.objects.get(id = time_id)
 
         doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
-        
+        doctor_id = doctor.id
+
+        # For schedule - day nikaleko
+        date_str = date
+        date = parser.parse(date_str).date()
+        # Convert the date string to a datetime object
+        date_obj1 = datetime.datetime.strptime(date_str, '%d %b %Y')
+        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
+        day_of_week = date_obj1.strftime('%A').lower()
+
+        schedule = Schedule.objects.filter(doctor_id = doctor_id, timing = time_id, day = day_of_week).first()
+        schedule_id = schedule.id
         
         context = {
             'date' : formatted_date,
             'time' : time,
             'doctor' : doctor,
-            'user' : patient,
+            'patient' : patient,
+            'schedule' : schedule_id,
         }
 
     return render(request,'main/checkout.html',context)
@@ -613,14 +643,6 @@ def PATIENT_BOOKING(request):
 
         return render(request,'main/booking-success.html',context)
     
-def EsewaRequestView(request):
-    if request.method == "POST":
-        context = {
-
-        }
-
-        return render(request,'main/esewa-request.html',context)
-    
 def EsewaVerifyView(request):
 
         amt = request.GET.get("amt")
@@ -642,6 +664,50 @@ def EsewaVerifyView(request):
         }
 
         return render(request,'main/esewa-request.html',context)
+
+
+# def FORGOT_PASSWORD(request):
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         try:
+#             user = User.objects.get(email=email)
+#         except User.DoesNotExist:
+#             messages.error(request, 'User with this email does not exist.')
+#             return render(request, 'main/forgot-password.html')
+
+#         # Generate and send the reset password email
+#         token = default_token_generator.make_token(user)
+#         reset_url = f'http://http://127.0.0.1:8000/reset-password/{user.pk}/{token}/'
+#         send_mail(
+#             'Password Reset',
+#             f'Click the link to reset your password: {reset_url}',
+#             'maknees321@gmail.com',  # Replace with your sender email
+#             [email],
+#             fail_silently=False,
+#         )
+
+#         messages.success(request, 'Password reset email sent. Please check your email.')
+#         return redirect('login')  # Redirect to login page after sending the email
+
+#     return render(request,'main/forgot-password.html')
+
+
+# def reset_password(request, uid, token):
+#     try:
+#         user = User.objects.get(pk=uid)
+#     except User.DoesNotExist:
+#         # Handle invalid user ID
+#         return render(request, 'main/invalid_reset_link.html')
+
+#     if default_token_generator.check_token(user, token):
+#         # Show the reset password form
+#         return auth_views.PasswordResetConfirmView.as_view(
+#             template_name='main/reset_password.html',
+#             success_url='/login/',
+#         )(request, uidb64=uid, token=token)
+#     else:
+#         # Handle invalid token
+#         return render(request, 'main/invalid_reset_link.html')
 
    
 

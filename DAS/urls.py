@@ -46,8 +46,16 @@ urlpatterns = [
     path('doctor-schedule', views.DOCTOR_SCHEDULE, name='doctor-schedule'),
     path('checkout/<slug:slug>', views.CHECKOUT, name='checkout'),
     path('patient-booking>', views.PATIENT_BOOKING, name='patient-booking'),
-    path('esewa-request', views.EsewaRequestView, name = 'esewa-request'),
-    path('esewa-verify', views.EsewaVerifyView, name = 'esewa-verify')
+    path('esewa-verify', views.EsewaVerifyView, name = 'esewa-verify'),
+
+    path('forgot-password', views.CustomPasswordResetView.as_view(), name = 'forgot-password'),
+    path('password_reset/done/', views.CustomPasswordResetDoneView.as_view(), name = 'password_reset_done'),
+    # path('reset-password/<str:uid>/<str:token>/', views.reset_password, name='reset_password'),
+    # path('password_reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    # path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

@@ -137,3 +137,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_COOKIE_AGE = 21600  # 6 hr in seconds
 
+
+# EMAIL
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'maknees321@gmail.com'
+EMAIL_HOST_PASSWORD = 'lgafnvdwkinzqqwv'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'maknees321@gmail.com'
+
+
