@@ -137,22 +137,22 @@
 									<input value="0" name="psc" type="hidden">
 									<input value="0" name="pdc" type="hidden">
 									<input value="EPAYTEST" name="scd" type="hidden">
-									<input value="{{schedule}}" name="pid" type="hidden">
-									<input value="http://127.0.0.1:8000/main/esewa-verify/" type="hidden" name="su">
+									<input value="{{schedule.id}}" name="pid" type="hidden">
+									<input value="http://127.0.0.1:8000/esewa-verify" type="hidden" name="su">
 									<input value="http://merchant.com.np/page/esewa_payment_failed?q=fu" type="hidden" name="fu">
 									
 									<!-- Submit Section -->
 									<div class="row submit-section mt-4">
-										<div class="col-md-4 col-sm-12">
+										<div class="col-md-6 col-sm-12">
 											<div class="form-group">
 												<button class="btn btn-primary submit-btn w-100" >Pay with E-Sewa</button>
 											</div>
 										</div>
 							</form>
 											
-										<div class="col-md-4 col-sm-12">
-											<div class="form-group">
-												<form action="{% url 'patient-booking' %}" method="POST">
+										<!-- <div class="col-md-4 col-sm-12"> -->
+											<!-- <div class="form-group">
+												<form action="" method="POST">
 													{% csrf_token %}
 													<input type="hidden" value="{{doctor.id}}" name="doc_id">
 													<input type="hidden" value="{{date}}" name="date">
@@ -160,9 +160,9 @@
 													<button type="submit" class="btn btn-primary submit-btn w-100">Reserve Booking </button>
 												</form>
 											</div>
-											</div>
+										</div> -->
 
-											<div class="col-md-4 col-sm-12">
+										<div class="col-md-6 col-sm-12">
 											<div class="form-group">
 												<a href="{% url 'search' %}" class="btn btn-primary submit-btn w-100">Cancel</a>
 											</div>

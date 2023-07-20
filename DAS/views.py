@@ -566,6 +566,8 @@ def CHECKOUT(request,slug):
     if request.method == "POST":
         user = request.user.id
         patient = Patient.objects.get(user_id=user)
+        patient_id = patient.id
+
         date = request.POST.get('date')
         time_id = request.POST.get('time')
         doctor = Doctor.objects.filter(slug = slug)
@@ -585,91 +587,72 @@ def CHECKOUT(request,slug):
         doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
         doctor_id = doctor.id
 
-        # For schedule - day nikaleko
-        date_str = date
-        date = parser.parse(date_str).date()
-        # Convert the date string to a datetime object
-        date_obj1 = datetime.datetime.strptime(date_str, '%d %b %Y')
         # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
-        day_of_week = date_obj1.strftime('%A').lower()
+        day_of_week = date_obj.strftime('%A').lower()
 
         schedule = Schedule.objects.filter(doctor_id = doctor_id, timing = time_id, day = day_of_week).first()
-        schedule_id = schedule.id
+
+        booking = Booking(
+            patient_id = patient_id,
+            doctor_id = doctor_id,
+            timing_id = time_id,
+            schedule_id = schedule.id,
+            date = date,
+            status = "Pending"
+        )
+
+        booking.save()
         
         context = {
             'date' : formatted_date,
             'time' : time,
             'doctor' : doctor,
             'patient' : patient,
-            'schedule' : schedule_id,
+            'schedule' : schedule,
         }
 
     return render(request,'main/checkout.html',context)
+    
+def EsewaVerifyView(request):
+    import xml.etree.ElementTree as ET
+    oid = request.GET.get("oid")
+    amt = request.GET.get("amt")
+    refId = request.GET.get("refId")
 
-def PATIENT_BOOKING(request):
-    if request.method == "POST":
-        user = request.user.id
-        patient = Patient.objects.get(user_id=user)
-        patient_id = patient.id
+    url ="https://uat.esewa.com.np/epay/transrec"
+    d = {
+        'amt': amt,
+        'scd': 'EPAYTEST',
+        'rid': refId,
+        'pid': oid,
+    }
+    
+    resp = req.post(url, d)
+    root = ET.fromstring(resp.content)
+    status = root[0].text.strip()
 
-        doctor_id = request.POST.get('doc_id')
-        doctor = Doctor.objects.get(id = doctor_id)
+    schedule_id = oid
+    booking = Booking.objects.filter(schedule_id = oid).first()
+    doctor_id = booking.doctor_id
+    timing_id = booking.timing_id
+    date = booking.date
 
-        date_str = request.POST.get('date')
-        date = parser.parse(date_str).date()
+    doctor = Doctor.objects.get(id = doctor_id)
+    timing = Timing.objects.get(id = timing_id)
 
-        # Convert the date string to a datetime object
-        date_obj = datetime.datetime.strptime(date_str, '%d %b %Y')
 
-        # Get the day of the week as a string (e.g., Monday, Tuesday, etc.)
-        day_of_week = date_obj.strftime('%A').lower()
-
-        time_id = request.POST.get('time')
-        time = Timing.objects.get(id = time_id)
-
-        schedule = Schedule.objects.filter(doctor_id = doctor_id, timing = time_id, day = day_of_week).first()
-        schedule_id = schedule.id
-
-        booking = Booking(
-            patient_id = patient_id,
-            doctor_id = doctor_id,
-            timing_id = time_id,
-            schedule_id = schedule_id,
-            date = date,
-            status = "Pending"
-        )
-
+    if status == "Success":
+        booking.status = "Completed"
         booking.save()
 
         context = {
             'doctor': doctor,
             'date': date,
-            'time' : time,
+            'time' : timing,
         }
-
         return render(request,'main/booking-success.html',context)
-    
-def EsewaVerifyView(request):
-
-        amt = request.GET.get("amt")
-        refId = request.GET.get("refId")
-
-        url ="https://uat.esewa.com.np/epay/transrec"
-        d = {
-            'amt': amt,
-            'scd': 'EPAYTEST',
-            'rid': refId,
-            'pid':'ee2c3ca1-696b-4cc5-a6be-2c40d929d453',
-        }
-        
-        resp = req.post(url, d)
-        print(resp.text)
-
-        context = {
-
-        }
-
-        return render(request,'main/esewa-request.html',context)
+    else:
+        return redirect("/esewa-request/?s_id="+schedule_id)
 
 
 # def FORGOT_PASSWORD(request):

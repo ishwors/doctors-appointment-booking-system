@@ -44,7 +44,6 @@ urlpatterns = [
     path('schedule-timings', views.SCHEDULE_TIMINGS, name='schedule-timings'),
     path('doctor-schedule', views.DOCTOR_SCHEDULE, name='doctor-schedule'),
     path('checkout/<slug:slug>', views.CHECKOUT, name='checkout'),
-    path('patient-booking>', views.PATIENT_BOOKING, name='patient-booking'),
     path('esewa-verify', views.EsewaVerifyView, name = 'esewa-verify'),
     path('forgot-password', views.CustomPasswordResetView.as_view(), name = 'forgot-password'),
     path('password_reset/done/', views.CustomPasswordResetDoneView.as_view(), name = 'password_reset_done'),

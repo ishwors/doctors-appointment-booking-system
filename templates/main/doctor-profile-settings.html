@@ -211,12 +211,12 @@
 										<h4 class="card-title">Specialization</h4>
 										<div class="form-group">
 											<select class="form-control select" name="specialization">
-												<option value="1" {% if user.doctor.specialization.title == 'Urology' %}selected{% endif %}>Urology</option>
-												<option value="2" {% if user.doctor.specialization.title == 'Neurology' %}selected{% endif %}>Neurology</option>
+												<option value="1" {% if user.doctor.specialization.title == 'Cardiologist' %}selected{% endif %}>Urology</option>
+												<option value="2" {% if user.doctor.specialization.title == 'Orthopedic' %}selected{% endif %}>Neurology</option>
 												<option value="3" {% if user.doctor.specialization.title == 'Dentist' %}selected{% endif %}>Dentist</option>
-												<option value="4" {% if user.doctor.specialization.title == 'Orthopedic' %}selected{% endif %}>Orthopedic</option>
-												<option value="5" {% if user.doctor.specialization.title == 'Cardiologist' %}selected{% endif %}>Cardiologist</option>
-												<option value="6" {% if user.doctor.specialization.title == 'Pathologist' %}selected{% endif %}>Pathologist</option>
+												<option value="4" {% if user.doctor.specialization.title == 'Urology' %}selected{% endif %}>Orthopedic</option>
+												<option value="5" {% if user.doctor.specialization.title == 'Pathologist' %}selected{% endif %}>Cardiologist</option>
+												<option value="6" {% if user.doctor.specialization.title == 'Neurologist' %}selected{% endif %}>Pathologist</option>
 											</select>
 										</div> 
 									</div>
