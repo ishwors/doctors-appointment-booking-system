@@ -1,0 +1,307 @@
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/  30 Nov 2019 04:11:34 GMT -->
+<head>
+	{% load static %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		<title>Doccure</title>
+		
+		<!-- Favicons -->
+		<link type="image/x-icon" href="{% static 'client-assets/img/favicon.png' %}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap.min.css' %}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/all.min.css' %}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/style.css' %}">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			{% include 'components/header.html' %}
+			<!-- /Header -->
+			
+			<!-- Home Banner -->
+			<section class="section section-search">
+				<div class="container-fluid">
+					<div class="banner-wrapper">
+						<div class="banner-header text-center">
+							<h1>Search Doctor, Make an Appointment</h1>
+							<p>Discover the best doctors, clinic & hospital the city nearest to you.</p>
+						</div>
+						
+						<!-- Search -->
+						<div class="search-box d-flex justify-content-center align-items-center">
+							<form action="/index-search">
+								<div class="form-group search-info">
+									<input type="text" id="doc" class="form-control" placeholder="Search Doctors, Clinics Name, Clinics Address,  Etc" name="search">
+								</div>
+								<button type="submit" class="btn btn-primary search-btn"><i class="fas fa-search"></i> <span>Search</span></button>
+							</form>
+						</div>
+						<!-- /Search -->
+						
+					</div>
+				</div>
+			</section>
+			<!-- /Home Banner -->
+			  
+			<!-- Clinic and Specialities -->
+			<section class="section section-specialities">
+				<div class="container-fluid">
+					<div class="section-header text-center">
+						<h2>Clinic and Specialities</h2>
+						<p class="sub-title">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-md-9">
+							<!-- Slider -->
+							<div class="specialities-slider slider">
+							
+								<!-- Slider Item -->
+								<div class="speicality-item text-center">
+									<div class="speicality-img">
+										<img src="{% static 'client-assets/img/specialities/specialities-01.png' %}" class="img-fluid" alt="Speciality">
+										<span><i class="fa fa-circle" aria-hidden="true"></i></span>
+									</div>
+									<p>Urology</p>
+								</div>	
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="speicality-item text-center">
+									<div class="speicality-img">
+										<img src="{% static 'client-assets/img/specialities/specialities-02.png' %}" class="img-fluid" alt="Speciality">
+										<span><i class="fa fa-circle" aria-hidden="true"></i></span>
+									</div>
+									<p>Neurology</p>	
+								</div>							
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="speicality-item text-center">
+									<div class="speicality-img">
+										<img src="{% static 'client-assets/img/specialities/specialities-03.png' %}" class="img-fluid" alt="Speciality">
+										<span><i class="fa fa-circle" aria-hidden="true"></i></span>
+									</div>	
+									<p>Orthopedic</p>	
+								</div>							
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="speicality-item text-center">
+									<div class="speicality-img">
+										<img src="{% static 'client-assets/img/specialities/specialities-04.png' %}" class="img-fluid" alt="Speciality">
+										<span><i class="fa fa-circle" aria-hidden="true"></i></span>
+									</div>	
+									<p>Cardiologist</p>	
+								</div>							
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="speicality-item text-center">
+									<div class="speicality-img">
+										<img src="{% static 'client-assets/img/specialities/specialities-05.png' %}" class="img-fluid" alt="Speciality">
+										<span><i class="fa fa-circle" aria-hidden="true"></i></span>
+									</div>	
+									<p>Dentist</p>
+								</div>							
+								<!-- /Slider Item -->
+								
+							</div>
+							<!-- /Slider -->
+							
+						</div>
+					</div>
+				</div>   
+			</section>	 
+			<!-- Clinic and Specialities -->
+		  
+			<!-- Popular Section -->
+			<section class="section section-doctor">
+				<div class="container-fluid">
+				   <div class="row">
+						<div class="col-lg-4">
+							<div class="section-header ">
+								<h2>Book Our Doctor</h2>
+								<p>Lorem Ipsum is simply dummy text </p>
+							</div>
+							<div class="about-content">
+								<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum.</p>
+								<p>web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes</p>					
+								<a href="javascript:;">Read More..</a>
+							</div>
+						</div>
+						<div class="col-lg-8">
+							<div class="doctor-slider slider">
+							
+							{% for i in doctor %}
+							<!-- Doctor Widget -->
+							<div class="profile-widget">
+								<div class="doc-img">
+									<a href="{{i.get_profile_url}}">
+										<img class="img-fluid" alt="User Image" src="{{i.profile_pic.url}}">
+									</a>
+								</div>
+								<div class="pro-content">
+									<h3 class="title">
+										<a href="{{i.get_profile_url}}">{{i.user.first_name}}</a> 
+										<i class="fas fa-check-circle verified"></i>
+									</h3>
+									<p class="speciality">{{i.degree}} - {{i.designation}}</p>
+									<div class="rating">
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+										<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+										<span class="d-inline-block average-rating">({{ i.aggregated_review.total_reviews }})</span>
+									</div>
+									<ul class="available-info">
+										<li>
+											<i class="fas fa-map-marker-alt"></i> {{i.address}}
+										</li>
+										<li>
+											<i class="far fa-building"></i> {{i.clinic_name}}
+										</li>
+										<li>
+											<i class="far fa-money-bill-alt"></i> Rs {{i.pricing}} 
+										</li>
+									</ul>
+									<div class="row row-sm">
+										<div class="col-6">
+											<a href="{{i.get_profile_url}}" class="btn view-btn">View Profile</a>
+										</div>
+										<div class="col-6">
+											<a href="{{i.get_booking_url}}" class="btn book-btn">Book Now</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- /Doctor Widget -->
+							{% endfor %}
+
+							</div>
+						</div>
+				   </div>
+				</div>
+			</section>
+			<!-- /Popular Section -->
+		   
+		   <!-- Availabe Features -->
+		   <section class="section section-features">
+				<div class="container-fluid">
+				   <div class="row">
+						<div class="col-md-5 features-img">
+							<img src="{% static 'client-assets/img/features/feature.png' %}" class="img-fluid" alt="Feature">
+						</div>
+						<div class="col-md-7">
+							<div class="section-header">	
+								<h2 class="mt-2">Availabe Features in Our Clinic</h2>
+								<p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. </p>
+							</div>	
+							<div class="features-slider slider">
+								<!-- Slider Item -->
+								<div class="feature-item text-center">
+									<img src="{% static 'client-assets/img/features/feature-01.jpg' %}" class="img-fluid" alt="Feature">
+									<p>Patient Ward</p>
+								</div>
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="feature-item text-center">
+									<img src="{% static 'client-assets/img/features/feature-02.jpg' %}" class="img-fluid" alt="Feature">
+									<p>Test Room</p>
+								</div>
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="feature-item text-center">
+									<img src="{% static 'client-assets/img/features/feature-03.jpg' %}" class="img-fluid" alt="Feature">
+									<p>ICU</p>
+								</div>
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="feature-item text-center">
+									<img src="{% static 'client-assets/img/features/feature-04.jpg' %}" class="img-fluid" alt="Feature">
+									<p>Laboratory</p>
+								</div>
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="feature-item text-center">
+									<img src="{% static 'client-assets/img/features/feature-05.jpg' %}" class="img-fluid" alt="Feature">
+									<p>Operation</p>
+								</div>
+								<!-- /Slider Item -->
+								
+								<!-- Slider Item -->
+								<div class="feature-item text-center">
+									<img src="{% static 'client-assets/img/features/feature-06.jpg' %}" class="img-fluid" alt="Feature">
+									<p>Medical</p>
+								</div>
+								<!-- /Slider Item -->
+							</div>
+						</div>
+				   </div>
+				</div>
+			</section>		
+			<!-- Availabe Features -->
+			
+			<!-- Footer -->
+			{% include 'components/footer.html' %}
+			<!-- /Footer -->
+		   
+	   </div>
+	   <!-- /Main Wrapper -->
+	  
+		<!-- jQuery -->
+		<script src="{% static 'client-assets/js/jquery.min.js' %}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'client-assets/js/popper.min.js' %}"></script>
+		<script src="{% static 'client-assets/js/bootstrap.min.js' %}"></script>
+		
+		<!-- Slick JS -->
+		<script src="{% static 'client-assets/js/slick.js' %}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'client-assets/js/script.js' %}"></script>
+
+		<!-- Search Bar Recommendation -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+
+		<script>
+			$(document).ready(function() {
+				$("#doc").autocomplete({
+					source: "/autocomplete",
+					minLength: 1,
+					delay: 300,
+				});
+			});
+		</script>
+		
+
+	</body>
+
+<!-- doccure/  30 Nov 2019 04:11:53 GMT -->
+</html>

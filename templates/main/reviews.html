@@ -1,0 +1,151 @@
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/reviews.html  30 Nov 2019 04:12:15 GMT -->
+<head>
+	{%load static %}
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="{% static 'client-assets/img/favicon.png'%}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap.min.css'%}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/fontawesome.min.css'%}">
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/all.min.css'%}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/style.css'%}">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
+			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
+		<![endif]-->
+
+		<style>
+			.comment-body {
+				width: 1100px;
+			}
+			.comment-content {
+				word-break: break-word;
+			}
+		</style>
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			{% include 'components/header.html' %}
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Reviews</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Reviews</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+						
+							<!-- Profile Sidebar -->
+							{% include 'components/doctor-sidebar.html' %}
+							<!-- /Profile Sidebar -->
+							
+						</div>
+						<div class="col-md-7 col-lg-8 col-xl-9">
+							<div class="doc-review review-listing">
+							
+								<!-- Review Listing -->
+									<ul class="comments-list">
+
+										{% for i in review %}
+										<!-- Comment List -->
+										<li>
+											<div class="comment">
+												{% for p in patient %}
+													{% if p.id == i.patient_id %}<img class="avatar avatar-sm rounded-circle" src="{{p.profile_pic.url}}">{% endif %}
+												{% endfor %}
+												<div class="comment-body">
+													<div class="meta-data">
+														{% for p in patient %}
+														<span class="comment-author">
+															{% if p.id == i.patient_id %}{{p.user.first_name}}{% endif %}
+														</span>
+														{% endfor %}
+
+														<div class="review-count rating">
+															<i class="fas fa-star {% if i.rating >= 1 %}filled{% else %}empty{% endif %}"></i>
+															<i class="fas fa-star {% if i.rating >= 2 %}filled{% else %}empty{% endif %}"></i>
+															<i class="fas fa-star {% if i.rating >= 3 %}filled{% else %}empty{% endif %}"></i>
+															<i class="fas fa-star {% if i.rating >= 4 %}filled{% else %}empty{% endif %}"></i>
+															<i class="fas fa-star {% if i.rating >= 5 %}filled{% else %}empty{% endif %}"></i>
+														</div>
+													</div>
+													<p class="comment-content">
+														{{i.review_text}}
+													</p>
+												</div>
+											</div>
+										</li>
+										<!-- /Comment List -->
+										{% endfor %}
+									</ul>
+								<!-- /Review Listing -->
+								
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			{% include 'components/footer.html' %}
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+	  
+		<!-- jQuery -->
+		<script src="{% static 'client-assets/js/jquery.min.js'%}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'client-assets/js/popper.min.js'%}"></script>
+		<script src="{% static 'client-assets/js/bootstrap.min.js'%}"></script>
+		
+		<!-- Sticky Sidebar JS -->
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/ResizeSensor.js'%}"></script>
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js'%}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'client-assets/js/script.js'%}"></script>
+		
+	</body>
+
+<!-- doccure/reviews.html  30 Nov 2019 04:12:15 GMT -->
+</html>

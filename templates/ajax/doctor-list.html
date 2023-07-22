@@ -1,0 +1,43 @@
+{% for i in doctors %}
+<div class="card">
+    <div class="card-body">
+        <div class="doctor-widget">
+            <div class="doc-info-left d-flex align-items-center " >
+                <div class="doctor-img">
+                    <a href="{{i.get_profile_url}}">
+                        <img src="{{i.profile_pic.url}}" class="img-fluid" alt="User Image">
+                    </a>
+                </div>
+                <div class="doc-info-cont">
+                    <h4 class="doc-name"><a href="{{i.get_profile_url}}">Dr. {{i.user.first_name}}</a></h4>
+                    <p class="doc-speciality">{{i.degree}} - {{i.designation}}</p>
+                    <h5 class="doc-department">{{i.specialization}}</h5>
+                    <div class="rating">
+                        <i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+                        <i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+                        <i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+                        <i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+                        <i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+                        <span class="d-inline-block average-rating">({{ i.aggregated_review.total_reviews }})</span>
+                    </div>
+                    <div class="clinic-details">
+                        <p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{i.address}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="doc-info-right">
+                <div class="clini-infos">
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> {{i.address}}</li>
+                        <li><i class="far fa-money-bill-alt"></i> Rs {{i.pricing}} </li>
+                    </ul>
+                </div>
+                <div class="clinic-booking">
+                    <a class="view-pro-btn" href="{{i.get_profile_url}}">View Profile</a>
+                    <a class="apt-btn" href="{{i.get_booking_url}}">Book Appointment</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
