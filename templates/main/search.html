@@ -1,0 +1,227 @@
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/search.html  30 Nov 2019 04:12:16 GMT -->
+<head>
+	{%load static %}
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<!-- Favicons -->
+		<link href="{% static 'client-assets/img/favicon.png'%}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap.min.css'%}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/fontawesome.min.css'%}">
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/all.min.css'%}">
+		
+		<!-- Datetimepicker CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap-datetimepicker.min.css'%}">
+		
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/select2/css/select2.min.css'%}">
+		
+		<!-- Fancybox CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fancybox/jquery.fancybox.min.css'%}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/style.css'%}">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
+			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
+		<![endif]-->
+
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			{% include 'components/header.html' %}
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-8 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Search</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Search</h2>
+						</div>
+						<!-- <div class="col-md-4 col-12 d-md-block d-none">
+							<div class="sort-by">
+								<span class="sort-title">Sort by</span>
+								<span class="sortby-fliter">
+									<select class="select">
+										<option>Select</option>
+										<option class="sorting">Rating</option>
+										<option class="sorting">Popular</option>
+										<option class="sorting">Latest</option>
+										<option class="sorting">Free</option>
+									</select>
+								</span>
+							</div>
+						</div> -->
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+
+			<!-- Home Banner -->
+			<section class="section section-search">
+				<div class="container-fluid">
+					<div class="banner-wrapper">
+						<div class="banner-header text-center">
+							<h1>Search Doctor, Make an Appointment</h1>
+							<p>Discover the best doctors, clinic & hospital the city nearest to you.</p>
+						</div>
+                         
+						<!-- Search -->
+						<div class="search-box d-flex justify-content-center align-items-center">
+							<form action="/index-search">
+								<div class="form-group search-info">
+									<input type="text" id="doc" class="form-control" placeholder="Search Doctors, Clinics Name, Clinics Address,  Etc" name="search">
+								</div>
+								<button type="submit" class="btn btn-primary search-btn"><i class="fas fa-search"></i> <span>Search</span></button>
+							</form>
+						</div>
+						<!-- /Search -->
+						
+					</div>
+				</div>
+			</section>
+			<!-- /Home Banner -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-12 col-lg-4 col-xl-3 theiaStickySidebar">
+						
+							<!-- Search Filter -->
+							{% include 'components/search-filter.html' %}
+							<!-- /Search Filter -->
+
+						</div>
+
+						<div class="col-md-12 col-lg-8 col-xl-9" id="filteredDoctors">
+						<p class="ajaxLoader">Loading....</p>
+
+							<!-- Dynamic Doctor Widget -->
+							{% for i in doctors %}
+								<div class="card">
+									<div class="card-body">
+										<div class="doctor-widget">
+											<div class="doc-info-left d-flex align-items-center " >
+												<div class="doctor-img">
+													<a href="{{i.get_profile_url}}">
+														<img src="{{i.profile_pic.url}}" class="img-fluid" alt="User Image">
+													</a>
+												</div>
+												<div class="doc-info-cont">
+													<h4 class="doc-name"><a href="{{i.get_profile_url}}">Dr. {{i.user.first_name}}</a></h4>
+													<p class="doc-speciality">{{i.degree}} - {{i.designation}}</p>
+													<h5 class="doc-department">{{i.specialization}}</h5>
+													<div class="rating">
+														<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+														<i class="fas fa-star {% if i.aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+														<span class="d-inline-block average-rating">({{ i.aggregated_review.total_reviews }})</span>
+													</div>
+													<div class="clinic-details">
+														<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{i.address}}</p>
+													</div>
+												</div>
+											</div>
+											<div class="doc-info-right">
+												<div class="clini-infos">
+													<ul>
+														<li><i class="fas fa-map-marker-alt"></i> {{i.address}}</li>
+														<li><i class="far fa-money-bill-alt"></i> Rs {{i.pricing}} </li>
+													</ul>
+												</div>
+												<div class="clinic-booking">
+													<a class="view-pro-btn" href="{{i.get_profile_url}}">View Profile</a>
+													<a class="apt-btn" href="{{i.get_booking_url}}">Book Appointment</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								{% endfor %}
+
+							<!-- <div class="load-more text-center">
+								<a class="btn btn-primary btn-sm" href="javascript:void(0);">Load More</a>	
+							</div>	 -->
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			{% include 'components/footer.html' %}
+			<!-- /Footer -->
+
+		</div>
+		<!-- /Main Wrapper -->
+	  
+		<!-- jQuery -->
+		<script src="{% static 'client-assets/js/jquery.min.js'%}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'client-assets/js/popper.min.js'%}"></script>
+		<script src="{% static 'client-assets/js/bootstrap.min.js'%}"></script>
+		
+		<!-- Sticky Sidebar JS -->
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/ResizeSensor.js'%}"></script>
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js'%}"></script>
+		
+		<!-- Select2 JS -->
+		<script src="{% static 'client-assets/plugins/select2/js/select2.min.js'%}"></script>
+		
+		<!-- Datetimepicker JS -->
+		<script src="{% static 'client-assets/js/moment.min.js'%}"></script>
+		<script src="{% static 'client-assets/js/bootstrap-datetimepicker.min.js'%}"></script>
+		
+		<!-- Fancybox JS -->
+		<script src="{% static 'client-assets/plugins/fancybox/jquery.fancybox.min.js'%}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'client-assets/js/script.js'%}"></script>
+
+		<!-- Search Bar Recommendation -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+		<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/smoothness/jquery-ui.css">
+
+		<script>
+			$(document).ready(function() {
+				$("#doc").autocomplete({
+					source: "{% url 'autocomplete'%}",
+					minLength: 1,
+					delay: 300
+				});
+			});
+		</script>
+
+	</body>
+
+<!-- doccure/search.html  30 Nov 2019 04:12:16 GMT -->
+</html>
