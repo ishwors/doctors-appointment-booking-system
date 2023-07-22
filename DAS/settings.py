@@ -136,6 +136,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SESSION_COOKIE_AGE = 21600  # 6 hr in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
 # EMAIL

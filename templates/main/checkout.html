@@ -149,23 +149,13 @@
 											</div>
 										</div>
 							</form>
-											
-										<!-- <div class="col-md-4 col-sm-12"> -->
-											<!-- <div class="form-group">
-												<form action="" method="POST">
-													{% csrf_token %}
-													<input type="hidden" value="{{doctor.id}}" name="doc_id">
-													<input type="hidden" value="{{date}}" name="date">
-													<input type="hidden" value="{{time.id}}" name="time">
-													<button type="submit" class="btn btn-primary submit-btn w-100">Reserve Booking </button>
-												</form>
-											</div>
-										</div> -->
-
 										<div class="col-md-6 col-sm-12">
-											<div class="form-group">
-												<a href="{% url 'search' %}" class="btn btn-primary submit-btn w-100">Cancel</a>
-											</div>
+											<form method="post" action="{% url 'cancel-booking' %}">
+												{% csrf_token %}
+												<div class="form-group">
+													<button type="submit" class="btn btn-primary submit-btn w-100">Cancel</button>
+												</div>
+											</form>
 										</div>
 									</div>
 

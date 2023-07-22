@@ -122,8 +122,8 @@
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Date of Birth</label>
-											<input type="date" class="form-control" value="{{dob}}" name="dob">
+											<label>Date of Birth <span class="text-danger">*</span></label>
+											<input type="date" class="form-control" value="{{dob}}" name="dob" required>
 										</div>
 									</div>
 									<div class="col-md-6">
@@ -160,14 +160,14 @@
 								<div class="row form-row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Clinic Name</label>
-											<input type="text" class="form-control" name="clinic_name" value="{{user.doctor.clinic_name}}">
+											<label>Clinic Name <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" name="clinic_name" value="{% if user.doctor.clinic_name != 'None' %}{{ user.doctor.clinic_name }}{% endif %}" required>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Clinic Address</label>
-											<input type="text" class="form-control" name="clinic_address" value="{{user.doctor.clinic_address}}">
+											<label>Clinic Address <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" name="clinic_address" value="{% if user.doctor.clinic_address != 'None' %}{{user.doctor.clinic_address}}{% endif %}" required>
 										</div>
 									</div>
 								</div>
@@ -182,14 +182,14 @@
 								<div class="row form-row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Phone Number</label>
-											<input type="text" class="form-control"value="{{user.doctor.mobile}}" name="mobile">
+											<label>Phone Number <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" value="{{user.doctor.mobile}}" name="mobile" required pattern="[0-9]{10}" title="Enter a valid 10-digit mobile number">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label>Address </label>
-											<input type="text" class="form-control" value="{{user.doctor.address}}" name="address">
+											<label>Address <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" value="{% if user.doctor.address != 'None' %}{{user.doctor.address}}{% endif %}" name="address" required>
 										</div>
 									</div>
 								</div>
@@ -202,21 +202,21 @@
 							<div class="card-body">
 								<div class="row form-row">
 									<div class="col-md-6">
-										<h4 class="card-title">Pricing</h4>
+										<h4 class="card-title">Pricing <span class="text-danger">*</span></h4>
 										<div class="form-group">
-											<input type="text" class="form-control"  name="pricing" value="{{user.doctor.pricing}}">
+											<input type="number" class="form-control"  name="pricing" value="{{user.doctor.pricing}}" required>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<h4 class="card-title">Specialization</h4>
 										<div class="form-group">
 											<select class="form-control select" name="specialization">
-												<option value="1" {% if user.doctor.specialization.title == 'Cardiologist' %}selected{% endif %}>Urology</option>
-												<option value="2" {% if user.doctor.specialization.title == 'Orthopedic' %}selected{% endif %}>Neurology</option>
+												<option value="1" {% if user.doctor.specialization.title == 'Cardiology' %}selected{% endif %}>Cardiology</option>
+												<option value="2" {% if user.doctor.specialization.title == 'Orthopedic' %}selected{% endif %}>Orthopedic</option>
 												<option value="3" {% if user.doctor.specialization.title == 'Dentist' %}selected{% endif %}>Dentist</option>
-												<option value="4" {% if user.doctor.specialization.title == 'Urology' %}selected{% endif %}>Orthopedic</option>
-												<option value="5" {% if user.doctor.specialization.title == 'Pathologist' %}selected{% endif %}>Cardiologist</option>
-												<option value="6" {% if user.doctor.specialization.title == 'Neurologist' %}selected{% endif %}>Pathologist</option>
+												<option value="4" {% if user.doctor.specialization.title == 'Urology' %}selected{% endif %}>Urology</option>
+												<option value="5" {% if user.doctor.specialization.title == 'Pathology' %}selected{% endif %}>Pathology</option>
+												<option value="6" {% if user.doctor.specialization.title == 'Neurology' %}selected{% endif %}>Neurology</option>
 											</select>
 										</div> 
 									</div>
@@ -235,8 +235,8 @@
 											<div class="row form-row">
 												<div class="col-12 col-md-6">
 													<div class="form-group">
-														<label>Degree</label>
-														<input type="text" class="form-control" value="{{user.doctor.degree}}" name="degree">
+														<label>Degree <span class="text-danger">*</span></label>
+														<input type="text" class="form-control" value="{% if user.doctor.degree != 'None' %}{{user.doctor.degree}}{% endif %}" name="degree" required>
 													</div>
 												</div>
 											</div>
@@ -257,14 +257,14 @@
 											<div class="row form-row">
 												<div class="col-12 col-md-6">
 													<div class="form-group">
-														<label>Experience (in years)</label>
-														<input type="text" class="form-control" value="{{user.doctor.experience}}" name="experience">
+														<label>Experience (in years) <span class="text-danger">*</span></label>
+														<input type="text" class="form-control" value="{% if user.doctor.experience != 'None' %}{{user.doctor.experience}}{% endif %}" name="experience" required>
 													</div> 
 												</div>
 												<div class="col-12 col-md-6">
 													<div class="form-group">
 														<label>Designation</label>
-														<input type="text" class="form-control" value="{{user.doctor.designation}}" name="designation">
+														<input type="text" class="form-control" value="{% if user.doctor.designation != 'None' %}{{user.doctor.designation}}{% endif %}" name="designation">
 													</div> 
 												</div>
 											</div>

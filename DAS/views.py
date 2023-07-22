@@ -2,20 +2,21 @@
 import datetime
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import PasswordChangeView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.urls import reverse_lazy
 from .forms import CustomPasswordChangeForm, CustomPasswordResetForm, CustomPasswordResetConfirmForm
-from app.models import Booking, Doctor, Gender, Patient, Review, Specialization, Schedule, Timing
+from app.models import Booking, Doctor, Gender, Patient, Review, Specialization, Schedule, Timing, Invoice
 from django.template.loader import render_to_string
 from django.db.models import Q
 from django.template.defaultfilters import date as format_date
 from django.db.models import Avg, Count
 from dateutil import parser
 import requests as req
+from datetime import date
 
 
 from DAS import email_backend
@@ -74,7 +75,35 @@ def index(request):
 @login_required(login_url="login")
 def DOCTOR_DASHBOARD(request):
     if request.user.last_name == "Doctor":
-        return render(request,'main/doctor-dashboard.html')
+        user = request.user
+        doctor = user.doctor
+
+        # Get today's date
+        today = date.today()
+
+        # Filter bookings for the doctor for today's date and upcoming dates
+        history_bookings = Booking.objects.filter(doctor=doctor, date__lte=today, status__in=['Completed'])
+        today_bookings = Booking.objects.filter(doctor=doctor, date=today, status__in=['Confirmed'])
+        upcoming_bookings = Booking.objects.filter(doctor=doctor, date__gt=today, status__in=['Confirmed'])
+
+        # Find Total Patients (unique patients associated with the doctor)
+        total_patients = Patient.objects.filter(booking__doctor=doctor).distinct().count()
+
+        # Find Today's Patient Count (unique patients with appointments today)
+        today_patient_count = Patient.objects.filter(booking__doctor=doctor, booking__date=today).distinct().count()
+
+        # Find Total Appointments (appointments associated with the doctor)
+        total_appointments = Booking.objects.filter(doctor=doctor).count()
+
+        context = {
+            'history_bookings': history_bookings,
+            'today_bookings': today_bookings,
+            'upcoming_bookings': upcoming_bookings,
+            'total_patients': total_patients,
+            'today_patient_count': today_patient_count,
+            'total_appointments': total_appointments,
+        }
+        return render(request, 'main/doctor-dashboard.html', context)
     
     return redirect('login')
 
@@ -312,8 +341,18 @@ def DO_LOGIN(request):
 @login_required(login_url="login")
 def PATIENT_DASHBOARD(request):
     if request.user.last_name == "Patient":
-        return render(request,'main/patient-dashboard.html')
-    
+        user_id = request.user.id
+        user = User.objects.get(id=user_id)
+        patient_id = user.patient.id
+
+        booking_filter = Booking.objects.filter(patient_id=patient_id, status__in=['Confirmed']).order_by('-date')
+        invoice_filter = Invoice.objects.filter(patient_id=patient_id).order_by('-issued_on')
+        
+        context = {
+            'booking': booking_filter,
+            'invoice': invoice_filter,
+        }
+        return render(request,'main/patient-dashboard.html', context)
     return redirect('login')
 
 
@@ -456,6 +495,39 @@ def REVIEWS(request):
 
     return render(request, 'main/reviews.html', context)
 
+@login_required(login_url="login") 
+def complete_booking(request, booking_id):
+    try:
+        booking = Booking.objects.get(id=booking_id)
+        if booking.status == "Confirmed":
+            # Change the booking status to "Completed"
+            booking.status = "Completed"
+            booking.save()
+    except Booking.DoesNotExist:
+        pass
+
+    # Redirect back to the doctor's dashboard or any relevant page
+    return redirect('doctor-dashboard')  # Replace 'doctor-dashboard' with your actual URL name
+
+@login_required(login_url="login")  # Requires the user to be logged in to access the view
+def INVOICE_VIEW(request, invoice_id):
+    user = request.user
+    patient = user.patient
+
+    if patient:
+        invoice = get_object_or_404(Invoice, id=invoice_id)
+
+        # Check if the current user is the owner of the invoice
+        if patient == invoice.patient:
+            context = {
+                'invoice': invoice
+            }
+
+            return render(request, 'main/invoice-view.html', context)
+
+    # Redirect to the index page for unauthorized users or patients without access
+    return redirect('login')
+
 def SCHEDULE_TIMINGS(request):
     doctorid = request.user.id
     doctor = Doctor.objects.get(user_id=doctorid)
@@ -548,9 +620,14 @@ def BOOKING(request,slug):
             }
 
             # check Date
-            if not value.exists():
-                messages.warning(request, 'No schedule available for the selected date !')
+            if not value.exists() or not filtered_value.exists():
+                messages.warning(request, 'No time-slots available for the selected date !')
                 return render(request,'main/booking.html',context)
+            
+            # check Date
+            # if not filtered_value.exists():
+            #     messages.warning(request, 'No time-slots available for the selected date !')
+            #     return render(request,'main/booking.html',context)
 
             return render(request,'main/booking.html',context)
 
@@ -612,6 +689,20 @@ def CHECKOUT(request,slug):
         }
 
     return render(request,'main/checkout.html',context)
+
+@login_required(login_url="login")
+def CANCEL_BOOKING(request):
+    if request.method == "POST":
+        user = request.user
+        patient = user.patient
+
+        # Get the latest booking record for the current patient
+        booking = Booking.objects.filter(patient=patient).latest('created_at')
+
+        # Delete the booking record
+        booking.delete()
+
+    return redirect('search')  # Redirect to the search page or any other appropriate page
     
 def EsewaVerifyView(request):
     import xml.etree.ElementTree as ET
@@ -631,6 +722,11 @@ def EsewaVerifyView(request):
     root = ET.fromstring(resp.content)
     status = root[0].text.strip()
 
+
+    user = request.user.id
+    patient = Patient.objects.get(user_id=user)
+    patient_id = patient.id
+    
     schedule_id = oid
     booking = Booking.objects.filter(schedule_id = oid).first()
     doctor_id = booking.doctor_id
@@ -642,13 +738,23 @@ def EsewaVerifyView(request):
 
 
     if status == "Success":
-        booking.status = "Completed"
+        booking.status = "Confirmed"
         booking.save()
+
+        invoice = Invoice(
+            patient_id = patient_id,
+            doctor_id = doctor_id,
+            booking_id = booking.id,
+            amount = amt
+        )
+    
+        invoice.save()
 
         context = {
             'doctor': doctor,
             'date': date,
             'time' : timing,
+            'invoice' : invoice,
         }
         return render(request,'main/booking-success.html',context)
     else:
