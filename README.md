@@ -21,4 +21,4 @@ Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
 
 
 ### Project Docs & Presentation
-Open [Google Drive Folder](https://drive.google.com/drive/folders/1e4Hw3xBGlLd5gb8UX-83GHcDp6BG_lrK?usp=sharing)
+Open [Google Drive Folder](https://drive.google.com/drive/folders/1e4Hw3xBGlLd5gb8UX-83GHcDp6BG_lrK?usp=sharing) [only with apex mail]
