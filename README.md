@@ -15,3 +15,6 @@ In this project directory, you can run:
 
 Runs the app in the development mode.\
 Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
+
+
+![Home Page](https://github.com/ishwors/major-project/blob/develop/Docconnect.png?raw=true)
