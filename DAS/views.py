@@ -85,6 +85,7 @@ def DOCTOR_DASHBOARD(request):
         history_bookings = Booking.objects.filter(doctor=doctor, date__lte=today, status__in=['Completed'])
         today_bookings = Booking.objects.filter(doctor=doctor, date=today, status__in=['Confirmed'])
         upcoming_bookings = Booking.objects.filter(doctor=doctor, date__gt=today, status__in=['Confirmed'])
+        booking = Booking.objects.all().order_by('id')
 
         # Find Total Patients (unique patients associated with the doctor)
         total_patients = Patient.objects.filter(booking__doctor=doctor).distinct().count()
@@ -96,6 +97,7 @@ def DOCTOR_DASHBOARD(request):
         total_appointments = Booking.objects.filter(doctor=doctor).count()
 
         context = {
+            'booking': booking,
             'history_bookings': history_bookings,
             'today_bookings': today_bookings,
             'upcoming_bookings': upcoming_bookings,
@@ -188,16 +190,14 @@ def autocomplete(request):
         user = User.objects.filter(last_name='Doctor')
         search_term = request.GET.get('term')
 
-        users = user.filter(
-            Q(first_name__icontains=search_term)
-            | Q(doctor__clinic_name__icontains=search_term)
-            | Q(doctor__clinic_address__icontains=search_term)
-        )
+        users_by_first_name = user.filter(first_name__icontains=search_term)
+        titles = [user.first_name for user in users_by_first_name]
 
-        titles = [f"{user.first_name}" for user in users]
-        titles += [f"{user.doctor.clinic_name}" for user in users]
-        titles += [f"{user.doctor.clinic_address}" for user in users]
+        users_by_clinic_name = user.filter(doctor__clinic_name__icontains=search_term)
+        titles += [user.doctor.clinic_name for user in users_by_clinic_name]
 
+        users_by_clinic_address = user.filter(doctor__clinic_address__icontains=search_term)
+        titles += [user.doctor.clinic_address for user in users_by_clinic_address]
 
         return JsonResponse(titles, safe=False)
 
@@ -369,6 +369,7 @@ def PROFILE_SETTINGS(request):
         fname = request.POST.get('fname')
         email = request.POST.get('email')
         blood = request.POST.get('blood')
+        gender= request.POST.get('gender')
         dob = request.POST.get('dob')
         mobile = request.POST.get('mobile')
         address = request.POST.get('address')
@@ -385,6 +386,7 @@ def PROFILE_SETTINGS(request):
 
         patient.dob = dob
         patient.blood_group = blood
+        patient.gender_id = gender
         patient.mobile = mobile
         patient.address = address
         patient.city = city
@@ -623,11 +625,6 @@ def BOOKING(request,slug):
             if not value.exists() or not filtered_value.exists():
                 messages.warning(request, 'No time-slots available for the selected date !')
                 return render(request,'main/booking.html',context)
-            
-            # check Date
-            # if not filtered_value.exists():
-            #     messages.warning(request, 'No time-slots available for the selected date !')
-            #     return render(request,'main/booking.html',context)
 
             return render(request,'main/booking.html',context)
 

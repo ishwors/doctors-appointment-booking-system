@@ -140,10 +140,20 @@
 													<input type="text" value="{{user.patient.mobile}}" class="form-control" name="mobile" required pattern="[0-9]{10}" title="Enter a valid 10-digit mobile number" />
 												</div>
 											</div>																					
-											<div class="col-12">
+											<div class="col-12  col-md-6">
 												<div class="form-group">
 												  <label>Address <span class="text-danger">*</span></label>
 												  <input type="text" class="form-control" name="address" value="{% if user.patient.address != 'None' %}{{ user.patient.address }}{% endif %}" required>
+												</div>
+											</div>
+											<div class="col-12 col-md-6">
+												<div class="form-group">
+													<label>Gender</label>
+													<select class="form-control select" name="gender">
+														<option value="1" {% if user.doctor.gender.title == 'Male' %}selected{% endif %}>Male</option>
+														<option value="2" {% if user.doctor.gender.title == 'Female' %}selected{% endif %}>Female</option>
+														<option value="3" {% if user.doctor.gender.title == 'Others' %}selected{% endif %}>Others</option>
+													</select>
 												</div>
 											</div>
 											<div class="col-12 col-md-6">

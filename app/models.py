@@ -28,6 +28,7 @@ class Patient(models.Model):
     # Add your custom fields here
     profile_pic = models.ImageField(default='default.png', null=True, blank=True) #stored in a separate media folder
     dob = models.DateField(null=True)
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True)
     blood_group = models.CharField(max_length=3,null=True)
     mobile = models.CharField(max_length=15 ,null=True, unique=True)
     address = models.CharField(max_length=150 ,null=True)
