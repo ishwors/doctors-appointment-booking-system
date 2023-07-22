@@ -18,3 +18,7 @@ Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
 
 
 ![Home Page](https://github.com/ishwors/major-project/blob/develop/Docconnect.png?raw=true)
+
+
+### Project Docs & Presentation
+Open [Google Drive Folder](https://drive.google.com/drive/folders/1e4Hw3xBGlLd5gb8UX-83GHcDp6BG_lrK?usp=sharing)
