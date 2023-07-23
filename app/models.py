@@ -28,8 +28,9 @@ class Patient(models.Model):
     # Add your custom fields here
     profile_pic = models.ImageField(default='default.png', null=True, blank=True) #stored in a separate media folder
     dob = models.DateField(null=True)
+    gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True)
     blood_group = models.CharField(max_length=3,null=True)
-    mobile = models.CharField(max_length=15 ,null=True)
+    mobile = models.CharField(max_length=15 ,null=True, unique=True)
     address = models.CharField(max_length=150 ,null=True)
     city = models.CharField(max_length=50 ,null=True)
     state = models.CharField(max_length=50 ,null=True)
@@ -42,7 +43,7 @@ class Doctor(models.Model):
     profile_pic = models.ImageField(default='default.png', null=True, blank=True) #stored in a separate media folder
     gender = models.ForeignKey(Gender, on_delete=models.CASCADE, null=True)
     specialization = models.ForeignKey(Specialization, on_delete=models.CASCADE, null=True)
-    mobile = models.CharField(max_length=15, null=True)
+    mobile = models.CharField(max_length=15, null=True, unique=True)
     dob = models.DateField(null=True)
     bio = models.TextField(blank=True)
     clinic_name = models.CharField(max_length=50, null=True)
@@ -59,6 +60,9 @@ class Doctor(models.Model):
     
     def get_booking_url(self):
         return reverse("booking", kwargs={'slug': self.slug})
+    
+    def get_checkout_url(self):
+        return reverse("checkout", kwargs={'slug': self.slug})
     
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -107,25 +111,36 @@ class Review(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE , null=True)
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE , null=True)
 
-# Slot
-class Slot(models.Model):
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    available = models.BooleanField(default=True)
-    date = models.DateField()
-
 # Timing
 class Timing(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-# Associative
+# Schedule
 class Schedule(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     timing = models.ForeignKey(Timing, on_delete=models.CASCADE)
     day = models.CharField(max_length=15, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+# Booking
+class Booking(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE , null=True)
+    timing = models.ForeignKey(Timing, on_delete=models.CASCADE , null=True)
+    schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE , null=True)
+    date = models.DateField(null=True)
+    status = models.CharField(max_length=15, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+
+class Invoice(models.Model):
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE, null=True)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE , null=True)
+    booking = models.OneToOneField(Booking, on_delete=models.CASCADE, related_name='invoice', null=True, blank=True)
+    amount = models.FloatField(null=True)
+    issued_on = models.DateField(auto_now_add=True)
+    payment_method = models.CharField(max_length=15, null=True, default='eSewa')
+    
 
 

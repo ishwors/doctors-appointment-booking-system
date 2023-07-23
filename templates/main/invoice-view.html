@@ -44,7 +44,7 @@
 						<div class="col-md-12 col-12">
 							<nav aria-label="breadcrumb" class="page-breadcrumb">
 								<ol class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index-2.html">Home</a></li>
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
 									<li class="breadcrumb-item active" aria-current="page">Invoice View</li>
 								</ol>
 							</nav>
@@ -71,8 +71,8 @@
 										</div>
 										<div class="col-md-6">
 											<p class="invoice-details">
-												<strong>Order:</strong> #00124 <br>
-												<strong>Issued:</strong> 20/07/2019
+												<strong>Booking:</strong> #000{{invoice.booking.id}} <br>
+												<strong>Issued:</strong> {{invoice.issued_on}}
 											</p>
 										</div>
 									</div>
@@ -85,9 +85,9 @@
 											<div class="invoice-info">
 												<strong class="customer-text">Invoice From</strong>
 												<p class="invoice-details invoice-details-two">
-													Dr. Darren Elder <br>
-													806  Twin Willow Lane, Old Forge,<br>
-													Newyork, USA <br>
+													Dr. {{invoice.doctor.user.first_name}} <br>
+													{{invoice.doctor.address}},<br>
+													Kathmandu, Nepal <br>
 												</p>
 											</div>
 										</div>
@@ -95,9 +95,9 @@
 											<div class="invoice-info invoice-info2">
 												<strong class="customer-text">Invoice To</strong>
 												<p class="invoice-details">
-													Walter Roberson <br>
-													299 Star Trek Drive, Panama City, <br>
-													Florida, 32405, USA <br>
+													{{invoice.patient.user.first_name}} <br>
+													{{invoice.patient.address}}, {{invoice.patient.city}}, <br>
+													{{invoice.patient.state}}, {{invoice.patient.zip_code}}, {{invoice.patient.country}} <br>
 												</p>
 											</div>
 										</div>
@@ -112,9 +112,8 @@
 											<div class="invoice-info">
 												<strong class="customer-text">Payment Method</strong>
 												<p class="invoice-details invoice-details-two">
-													Debit Card <br>
-													XXXXXXXXXXXX-2541 <br>
-													HDFC Bank<br>
+													eSewa <br>
+													9806800001 <br>
 												</p>
 											</div>
 										</div>
@@ -131,23 +130,13 @@
 													<thead>
 														<tr>
 															<th>Description</th>
-															<th class="text-center">Quantity</th>
-															<th class="text-center">VAT</th>
 															<th class="text-right">Total</th>
 														</tr>
 													</thead>
 													<tbody>
 														<tr>
 															<td>General Consultation</td>
-															<td class="text-center">1</td>
-															<td class="text-center">$0</td>
-															<td class="text-right">$100</td>
-														</tr>
-														<tr>
-															<td>Video Call Booking</td>
-															<td class="text-center">1</td>
-															<td class="text-center">$0</td>
-															<td class="text-right">$250</td>
+															<td class="text-right">Rs. {{invoice.amount}}</td>
 														</tr>
 													</tbody>
 												</table>
@@ -158,16 +147,8 @@
 												<table class="invoice-table-two table">
 													<tbody>
 													<tr>
-														<th>Subtotal:</th>
-														<td><span>$350</span></td>
-													</tr>
-													<tr>
-														<th>Discount:</th>
-														<td><span>-10%</span></td>
-													</tr>
-													<tr>
 														<th>Total Amount:</th>
-														<td><span>$315</span></td>
+														<td><span>Rs. {{invoice.amount}}</span></td>
 													</tr>
 													</tbody>
 												</table>
@@ -194,142 +175,7 @@
 			<!-- /Page Content -->
    
 			<!-- Footer -->
-			<footer class="footer">
-				
-				<!-- Footer Top -->
-				<div class="footer-top">
-					<div class="container-fluid">
-						<div class="row">
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-about">
-									<div class="footer-logo">
-										<img src="{% static 'client-assets/img/footer-logo.png'%}" alt="logo">
-									</div>
-									<div class="footer-about-content">
-										<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
-										<div class="social-icon">
-											<ul>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-facebook-f"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-twitter"></i> </a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-												</li>
-												<li>
-													<a href="#" target="_blank"><i class="fab fa-dribbble"></i> </a>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Patients</h2>
-									<ul>
-										<li><a href="search.html"><i class="fas fa-angle-double-right"></i> Search for Doctors</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="booking.html"><i class="fas fa-angle-double-right"></i> Booking</a></li>
-										<li><a href="patient-dashboard.html"><i class="fas fa-angle-double-right"></i> Patient Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-menu">
-									<h2 class="footer-title">For Doctors</h2>
-									<ul>
-										<li><a href="appointments.html"><i class="fas fa-angle-double-right"></i> Appointments</a></li>
-										<li><a href="chat.html"><i class="fas fa-angle-double-right"></i> Chat</a></li>
-										<li><a href="login.html"><i class="fas fa-angle-double-right"></i> Login</a></li>
-										<li><a href="doctor-register.html"><i class="fas fa-angle-double-right"></i> Register</a></li>
-										<li><a href="doctor-dashboard.html"><i class="fas fa-angle-double-right"></i> Doctor Dashboard</a></li>
-									</ul>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-							<div class="col-lg-3 col-md-6">
-							
-								<!-- Footer Widget -->
-								<div class="footer-widget footer-contact">
-									<h2 class="footer-title">Contact Us</h2>
-									<div class="footer-contact-info">
-										<div class="footer-address">
-											<span><i class="fas fa-map-marker-alt"></i></span>
-											<p> 3556  Beech Street, San Francisco,<br> California, CA 94108 </p>
-										</div>
-										<p>
-											<i class="fas fa-phone-alt"></i>
-											+1 315 369 5943
-										</p>
-										<p class="mb-0">
-											<i class="fas fa-envelope"></i>
-											doccure@example.com
-										</p>
-									</div>
-								</div>
-								<!-- /Footer Widget -->
-								
-							</div>
-							
-						</div>
-					</div>
-				</div>
-				<!-- /Footer Top -->
-				
-				<!-- Footer Bottom -->
-                <div class="footer-bottom">
-					<div class="container-fluid">
-					
-						<!-- Copyright -->
-						<div class="copyright">
-							<div class="row">
-								<div class="col-md-6 col-lg-6">
-									<div class="copyright-text">
-										<p class="mb-0"><a href="templateshub.net">Templates Hub</a></p>
-									</div>
-								</div>
-								<div class="col-md-6 col-lg-6">
-								
-									<!-- Copyright Menu -->
-									<div class="copyright-menu">
-										<ul class="policy-menu">
-											<li><a href="term-condition.html">Terms and Conditions</a></li>
-											<li><a href="privacy-policy.html">Policy</a></li>
-										</ul>
-									</div>
-									<!-- /Copyright Menu -->
-									
-								</div>
-							</div>
-						</div>
-						<!-- /Copyright -->
-						
-					</div>
-				</div>
-				<!-- /Footer Bottom -->
-				
-			</footer>
+			{% include 'components/footer.html' %}
 			<!-- /Footer -->
 		   
 		</div>

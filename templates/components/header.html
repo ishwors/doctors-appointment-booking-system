@@ -2,13 +2,6 @@
 <header class="header">
     <nav class="navbar navbar-expand-lg header-nav">
         <div class="navbar-header">
-            <a id="mobile_btn" href="javascript:void(0);">
-                <span class="bar-icon">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </span>
-            </a>
             <a href="{% url 'index' %}" class="navbar-brand logo">
                 <img src="{% static 'client-assets/img/logo.png' %}" class="img-fluid" alt="Logo">
             </a>
@@ -57,18 +50,62 @@
             </ul>		 
         </div>		 
         <ul class="nav header-navbar-rht">
-            <li class="nav-item contact-item">
-                <div class="header-contact-img">
-                    <i class="far fa-hospital"></i>							
-                </div>
-                <div class="header-contact-detail">
-                    <p class="contact-header">Contact</p>
-                    <p class="contact-info-header"> +1 315 369 5943</p>
+
+            {% if user.is_authenticated and user.last_name == 'Patient' %}
+            <!-- User Menu -->
+            <li class="nav-item dropdown has-arrow logged-item">
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                    <span class="user-img">
+                        <img class="rounded-circle" src="{{ user.patient.profile_pic.url }}" width="31" alt="Ryan Taylor">
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="user-header">
+                        <div class="avatar avatar-sm">
+                            <img src="{{ user.patient.profile_pic.url }}" alt="User Image" class="avatar-img rounded-circle">
+                        </div>
+                        <div class="user-text">
+                            <h6>{{user.first_name}}</h6>
+                            <p class="text-muted mb-0">{{user.last_name}}</p>
+                        </div>
+                    </div>
+                    <a class="dropdown-item" href="{% url 'patient-dashboard' %}">Dashboard</a>
+                    <a class="dropdown-item" href="{% url 'profile-settings' %}">Profile Settings</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
                 </div>
             </li>
+            <!-- /User Menu -->
+
+            {% elif user.is_authenticated and user.last_name == 'Doctor' %}
+            <!-- User Menu -->
+            <li class="nav-item dropdown has-arrow logged-item">
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                    <span class="user-img">
+                        <img class="rounded-circle" src="{{ user.doctor.profile_pic.url }}" width="31" alt="{{user.first_name}}">
+                    </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <div class="user-header">
+                        <div class="avatar avatar-sm">
+                            <img src="{{ user.doctor.profile_pic.url }}" alt="User Image" class="avatar-img rounded-circle">
+                        </div>
+                        <div class="user-text">
+                            <h6>{{user.first_name}}</h6>
+                            <p class="text-muted mb-0">{{user.last_name}}</p>
+                        </div>
+                    </div>
+                    <a class="dropdown-item" href="{% url 'doctor-dashboard' %}">Dashboard</a>
+                    <a class="dropdown-item" href="{% url 'doctor-profile-settings' %}">Profile Settings</a>
+                    <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                </div>
+            </li>
+            <!-- /User Menu -->
+
+            {% else %}
             <li class="nav-item">
-                <a class="nav-link header-login" href="{% url 'login' %}">login / Signup </a>
+                <a class="nav-link header-login" href="{% url 'login' %}">LOGIN / SIGNUP </a>
             </li>
+            {% endif %}
         </ul>
     </nav>
 </header>

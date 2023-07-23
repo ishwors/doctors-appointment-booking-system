@@ -135,11 +135,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SESSION_COOKIE_AGE = 3600  # 1 hr in seconds
+SESSION_COOKIE_AGE = 21600  # 6 hr in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 
-
-#Email notification 
+# EMAIL
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -148,3 +148,5 @@ EMAIL_HOST_USER = 'maknees321@gmail.com'
 EMAIL_HOST_PASSWORD = 'lgafnvdwkinzqqwv'
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'maknees321@gmail.com'
+
+

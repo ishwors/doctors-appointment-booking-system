@@ -24,7 +24,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('doctor-dashboard/',views.DOCTOR_DASHBOARD, name='doctor-dashboard'),
-    path('appointments/',views.APPOINTMENTS, name='appointments'),
     path('login/',views.LOGIN, name='login'),
     path('logout/', views.LOGOUT, name='logout'),
     path('register/',views.register, name='register'),
@@ -44,8 +43,16 @@ urlpatterns = [
     path('reviews', views.REVIEWS, name='reviews'),
     path('schedule-timings', views.SCHEDULE_TIMINGS, name='schedule-timings'),
     path('doctor-schedule', views.DOCTOR_SCHEDULE, name='doctor-schedule'),
-    path('checkout', views.CHECKOUT, name='checkout'),
-    path('forgot-password', views.FORGOT_PASSWORD, name='forgot-password'),
+    path('checkout/<slug:slug>', views.CHECKOUT, name='checkout'),
+    path('invoice-view/<int:invoice_id>/', views.INVOICE_VIEW, name='invoice-view'),
+    path('complete-booking/<int:booking_id>/', views.complete_booking, name='complete-booking'),
+    path('cancel-booking/', views.CANCEL_BOOKING, name='cancel-booking'),
+    path('esewa-verify', views.EsewaVerifyView, name = 'esewa-verify'),
+    path('forgot-password', views.CustomPasswordResetView.as_view(), name = 'forgot-password'),
+    path('password_reset/done/', views.CustomPasswordResetDoneView.as_view(), name = 'password_reset_done'),
+    path('reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
