@@ -110,6 +110,15 @@ def DOCTOR_DASHBOARD(request):
     return redirect('login')
 
 def LOGIN(request):
+
+    # Get today's date
+    today = date.today()
+    booking = Booking.objects.filter(date__lt=today, status__in=['Confirmed'])
+
+    for i in booking:
+        i.status = 'Completed'
+        i.save()
+
     return render(request,'main/login.html')
 
 def LOGOUT(request):
@@ -347,10 +356,12 @@ def PATIENT_DASHBOARD(request):
 
         booking_filter = Booking.objects.filter(patient_id=patient_id, status__in=['Confirmed']).order_by('-date')
         invoice_filter = Invoice.objects.filter(patient_id=patient_id).order_by('-issued_on')
+        history_filter = Booking.objects.filter(patient_id=patient_id, status__in=['Completed']).order_by('-date')
         
         context = {
             'booking': booking_filter,
             'invoice': invoice_filter,
+            'history': history_filter,
         }
         return render(request,'main/patient-dashboard.html', context)
     return redirect('login')
