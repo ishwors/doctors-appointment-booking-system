@@ -206,7 +206,7 @@
 																		<th>Appt Date</th>
 																		<th>Purpose</th>
 																		<th class="text-center">Paid Amount</th>
-																		<th class="text-center">Booking Status</th>
+																		<th class="text-center">Status</th>
 																		<th></th>
 																	</tr>
 																</thead>
@@ -224,7 +224,7 @@
 																			<td>General</td>
 																			<td class="text-center">Rs. {{i.invoice.amount}}</td>
 																			<td class="text-center">{{i.status}}</td>
-																			<td class="text-right">
+																			<td class="text-center">
 																				<div class="table-action">
 																					<a href="{% url 'complete-booking' i.id %}" class="btn btn-sm bg-success-light border border-success">
 																						<i class="fas fa-check"></i> 
@@ -261,8 +261,7 @@
 																		<th>Appt Date</th>
 																		<th>Purpose</th>
 																		<th class="text-center">Paid Amount</th>
-																		<th class="text-center">Booking Status</th>
-																		<th></th>
+																		<th class="text-center">Status</th>
 																	</tr>
 																</thead>
 																<tbody>

@@ -711,6 +711,19 @@ def CANCEL_BOOKING(request):
         booking.delete()
 
     return redirect('search')  # Redirect to the search page or any other appropriate page
+
+@login_required(login_url="login")
+def EsewaCancel(request):
+    user = request.user
+    patient = user.patient
+
+    # Get the latest booking record for the current patient
+    booking = Booking.objects.filter(patient=patient).latest('created_at')
+
+    # Delete the booking record
+    booking.delete()
+
+    return redirect('search')  # Redirect to the search page or any other appropriate page
     
 def EsewaVerifyView(request):
     import xml.etree.ElementTree as ET
