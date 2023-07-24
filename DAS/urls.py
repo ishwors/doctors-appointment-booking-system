@@ -47,6 +47,7 @@ urlpatterns = [
     path('invoice-view/<int:invoice_id>/', views.INVOICE_VIEW, name='invoice-view'),
     path('complete-booking/<int:booking_id>/', views.complete_booking, name='complete-booking'),
     path('cancel-booking/', views.CANCEL_BOOKING, name='cancel-booking'),
+    path('esewa-cancel/', views.EsewaCancel, name='esewa-cancel'),
     path('esewa-verify', views.EsewaVerifyView, name = 'esewa-verify'),
     path('forgot-password', views.CustomPasswordResetView.as_view(), name = 'forgot-password'),
     path('password_reset/done/', views.CustomPasswordResetDoneView.as_view(), name = 'password_reset_done'),
