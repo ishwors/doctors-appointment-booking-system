@@ -20,8 +20,8 @@ Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
 ![Home Page](https://github.com/ishwors/major-project/blob/develop/Docconnect.png?raw=true)
 
 
-### Project Docs & Presentation
-Open [Project Report](https://drive.google.com/file/d/1ficL9QrlwEVtG8RgWwDDB4Cfbh8HiOBB/view?usp=sharing) 
-Open [Diagrams](https://drive.google.com/file/d/1acYSLtK4VUqnKaXNzqfwwYdwkHiah7HF/view?usp=sharing)
-Open [Presentation Slides](https://www.canva.com/design/DAFpWS-QAxE/uidgwogwEyJSrSqoK_H5lA/edit?utm_content=DAFpWS-QAxE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
-Open [Demo Video](https://drive.google.com/file/d/1_F4kCB2bNX3OKrDGnj5aYKfJ0yHtTASg/view?usp=sharing)
+### Project Deliverables
+* Open [Project Report](https://drive.google.com/file/d/1ficL9QrlwEVtG8RgWwDDB4Cfbh8HiOBB/view?usp=sharing) 
+* Open [Diagrams](https://drive.google.com/file/d/1acYSLtK4VUqnKaXNzqfwwYdwkHiah7HF/view?usp=sharing)
+* Open [Presentation Slides](https://www.canva.com/design/DAFpWS-QAxE/uidgwogwEyJSrSqoK_H5lA/edit?utm_content=DAFpWS-QAxE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+* Open [Demo Video](https://drive.google.com/file/d/1_F4kCB2bNX3OKrDGnj5aYKfJ0yHtTASg/view?usp=sharing)
