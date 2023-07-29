@@ -1,0 +1,332 @@
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/doctor-profile-settings.html  30 Nov 2019 04:12:14 GMT -->
+<head>
+	{%load static %}
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="{% static 'client-assets/img/favicon.png'%}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap.min.css'%}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/fontawesome.min.css'%}">
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/all.min.css'%}">
+		
+		<!-- Select2 CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/select2/css/select2.min.css'%}">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/bootstrap-tagsinput/css/bootstrap-tagsinput.css'%}">
+		
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/dropzone/dropzone.min.css'%}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/style.css'%}">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
+			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
+		<![endif]-->
+	
+</head>
+
+<body>
+
+	<!-- Main Wrapper -->
+	<div class="main-wrapper">
+		
+			<!-- Header -->
+			{% include 'components/header.html' %}
+			<!-- /Header -->
+			
+		<!-- Breadcrumb -->
+		<div class="breadcrumb-bar">
+			<div class="container-fluid">
+				<div class="row align-items-center">
+					<div class="col-md-12 col-12">
+						<nav aria-label="breadcrumb" class="page-breadcrumb">
+							<ol class="breadcrumb">
+								<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+								<li class="breadcrumb-item active" aria-current="page">Profile Settings</li>
+							</ol>
+						</nav>
+						<h2 class="breadcrumb-title">Profile Settings</h2>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Breadcrumb -->
+			
+		<!-- Page Content -->
+		<div class="content">
+			<div class="container-fluid">
+				<div class="row">
+
+					<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+							
+						<!-- Profile Sidebar -->
+						{% include 'components/doctor-sidebar.html' %}
+						<!-- /Profile Sidebar -->
+						
+					</div>
+					
+					<div class="col-md-7 col-lg-8 col-xl-9">
+						<div class="card">
+							<div class="card-body">
+
+							<!-- Doctor Profile Settings Form -->
+							<form action="{% url 'doctor-profile-settings' %}" method="POST" enctype="multipart/form-data">
+								{% csrf_token %}
+								<h4 class="card-title">Basic Information</h4>
+								<div class="row form-row">
+									<div class="col-md-12">
+										<div class="form-group">
+											<div class="change-avatar">
+												<div class="profile-img">
+													<img id="image-preview" src="{% if user.doctor.profile_pic %}{{ user.doctor.profile_pic.url }}{% else %}{% static 'default.png' %}{% endif %}" alt="Profile Picture">
+												</div>
+												<div class="upload-img">
+													<div class="change-photo-btn">
+														<span><i class="fa fa-upload"></i> Upload Photo</span>
+														<input type="file" class="upload" name="image" accept="image/*" onchange="previewImage(event);">
+													</div>
+													<small class="form-text text-muted">Allowed JPG, GIF or PNG. Max size of 2MB</small>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Username <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" readonly  value="{{user.username}}" name="username">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Email <span class="text-danger">*</span></label>
+											<input type="email" class="form-control" readonly  value="{{user.email}}" name="email">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Full Name <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" value="{{user.first_name}}" name="fname" required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Date of Birth <span class="text-danger">*</span></label>
+											<input type="date" class="form-control" value="{{dob}}" name="dob" required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Gender</label>
+											<select class="form-control select" name="gender">
+												<option value="1" {% if user.doctor.gender.title == 'Male' %}selected{% endif %}>Male</option>
+												<option value="2" {% if user.doctor.gender.title == 'Female' %}selected{% endif %}>Female</option>
+												<option value="3" {% if user.doctor.gender.title == 'Others' %}selected{% endif %}>Others</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+							
+								
+						<!-- About Me -->
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">About Me</h4>
+								<div class="form-group mb-0">
+									<label>Biography</label>
+									<textarea class="form-control" rows="5" name="bio">{{ user.doctor.bio }}</textarea>
+								</div>
+							</div>
+						</div>
+						<!-- /About Me -->
+								
+						<!-- Clinic Info -->
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Clinic Info</h4>
+								<div class="row form-row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Clinic Name <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" name="clinic_name" value="{% if user.doctor.clinic_name != 'None' %}{{ user.doctor.clinic_name }}{% endif %}" required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Clinic Address <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" name="clinic_address" value="{% if user.doctor.clinic_address != 'None' %}{{user.doctor.clinic_address}}{% endif %}" required>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Clinic Info -->
+
+						<!-- Contact Details -->
+						<div class="card contact-card">
+							<div class="card-body">
+								<h4 class="card-title">Contact Details</h4>
+								<div class="row form-row">
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Phone Number <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" value="{{user.doctor.mobile}}" name="mobile" required pattern="[0-9]{10}" title="Enter a valid 10-digit mobile number">
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label>Address <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" value="{% if user.doctor.address != 'None' %}{{user.doctor.address}}{% endif %}" name="address" required>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Contact Details -->
+
+						<!-- Pricing -->
+						<div class="card contact-card">
+							<div class="card-body">
+								<div class="row form-row">
+									<div class="col-md-6">
+										<h4 class="card-title">Pricing <span class="text-danger">*</span></h4>
+										<div class="form-group">
+											<input type="number" class="form-control"  name="pricing" value="{{user.doctor.pricing}}" required>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<h4 class="card-title">Specialization</h4>
+										<div class="form-group">
+											<select class="form-control select" name="specialization">
+												<option value="1" {% if user.doctor.specialization.title == 'Cardiology' %}selected{% endif %}>Cardiology</option>
+												<option value="2" {% if user.doctor.specialization.title == 'Orthopedic' %}selected{% endif %}>Orthopedic</option>
+												<option value="3" {% if user.doctor.specialization.title == 'Dentist' %}selected{% endif %}>Dentist</option>
+												<option value="4" {% if user.doctor.specialization.title == 'Urology' %}selected{% endif %}>Urology</option>
+												<option value="5" {% if user.doctor.specialization.title == 'Pathology' %}selected{% endif %}>Pathology</option>
+												<option value="6" {% if user.doctor.specialization.title == 'Neurology' %}selected{% endif %}>Neurology</option>
+											</select>
+										</div> 
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Pricing -->
+					
+						<!-- Education -->
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Education</h4>
+								<div class="education-info">
+									<div class="row form-row education-cont">
+										<div class="col-12 col-md-10 col-lg-11">
+											<div class="row form-row">
+												<div class="col-12 col-md-6">
+													<div class="form-group">
+														<label>Degree <span class="text-danger">*</span></label>
+														<input type="text" class="form-control" value="{% if user.doctor.degree != 'None' %}{{user.doctor.degree}}{% endif %}" name="degree" required>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Education -->
+					
+						<!-- Experience -->
+						<div class="card">
+							<div class="card-body">
+								<h4 class="card-title">Experience</h4>
+								<div class="experience-info">
+									<div class="row form-row experience-cont">
+										<div class="col-12 col-md-10 col-lg-11">
+											<div class="row form-row">
+												<div class="col-12 col-md-6">
+													<div class="form-group">
+														<label>Experience (in years) <span class="text-danger">*</span></label>
+														<input type="text" class="form-control" value="{% if user.doctor.experience != 'None' %}{{user.doctor.experience}}{% endif %}" name="experience" required>
+													</div> 
+												</div>
+												<div class="col-12 col-md-6">
+													<div class="form-group">
+														<label>Designation</label>
+														<input type="text" class="form-control" value="{% if user.doctor.designation != 'None' %}{{user.doctor.designation}}{% endif %}" name="designation">
+													</div> 
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Experience -->
+
+						<div class="submit-section submit-btn-bottom">
+							<button type="submit" class="btn btn-primary submit-btn">Save Changes</button>
+						</div>
+							
+							</form>
+					</div>
+				</div>
+			</div>
+		</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			{% include 'components/footer.html' %}
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+	  
+		<!-- jQuery -->
+		<script src="{% static 'client-assets/js/jquery.min.js'%}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'client-assets/js/popper.min.js'%}"></script>
+		<script src="{% static 'client-assets/js/bootstrap.min.js'%}"></script>
+		
+		<!-- Sticky Sidebar JS -->
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/ResizeSensor.js'%}"></script>
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js'%}"></script>
+		
+		<!-- Select2 JS -->
+		<script src="{% static 'client-assets/plugins/select2/js/select2.min.js'%}"></script>
+		
+		<!-- Dropzone JS -->
+		<script src="{% static 'client-assets/plugins/dropzone/dropzone.min.js'%}"></script>
+		
+		<!-- Bootstrap Tagsinput JS -->
+		<script src="{% static 'client-assets/plugins/bootstrap-tagsinput/js/bootstrap-tagsinput.js'%}"></script>
+		
+		<!-- Profile Settings JS -->
+		<script src="{% static 'client-assets/js/profile-settings.js'%}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'client-assets/js/script.js'%}"></script>
+
+		<script>
+			function previewImage(event) {
+				const preview = document.getElementById('image-preview');
+				preview.src = URL.createObjectURL(event.target.files[0]);
+			}
+		</script>
+		
+	</body>
+
+<!-- doccure/doctor-profile-settings.html  30 Nov 2019 04:12:15 GMT -->
+</html>

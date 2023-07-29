@@ -1,0 +1,383 @@
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/doctor-dashboard.html  30 Nov 2019 04:12:03 GMT -->
+<head>
+	{% load static %}
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="{% static 'client-assets/img/favicon.png' %}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap.min.css' %}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/all.min.css' %}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/style.css' %}">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+
+		<style>
+			.btn.disabled {
+				opacity: 0.6; /* Adjust the opacity as per your preference */
+				pointer-events: none; /* Disable pointer events to prevent clicking */
+			}
+		</style>
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+
+			<!-- Header -->
+			{% include 'components/header.html' %}
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Dashboard</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-md-5 col-lg-4 col-xl-3 theiaStickySidebar">
+							
+							<!-- Profile Sidebar -->
+							{% include 'components/doctor-sidebar.html' %}
+							<!-- /Profile Sidebar -->
+							
+						</div>
+						
+						<div class="col-md-7 col-lg-8 col-xl-9">
+
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card dash-card">
+										<div class="card-body">
+											<div class="row">
+												<div class="col-md-12 col-lg-4">
+													<div class="dash-widget dct-border-rht">
+														<div class="circle-bar circle-bar1">
+															<div class="circle-graph1" data-percent="{{total_patients}}">
+																<img src="{% static 'client-assets/img/icon-01.png' %}" class="img-fluid" alt="patient">
+															</div>
+														</div>
+														<div class="dash-widget-info">
+															<h6>Total Patient</h6>
+															<h3>{{total_patients}}</h3>
+														</div>
+													</div>
+												</div>
+												
+												<div class="col-md-12 col-lg-4">
+													<div class="dash-widget dct-border-rht">
+														<div class="circle-bar circle-bar2">
+															<div class="circle-graph2" data-percent="{{today_patient_count}}">
+																<img src="{% static 'client-assets/img/icon-02.png' %}" class="img-fluid" alt="Patient">
+															</div>
+														</div>
+														<div class="dash-widget-info">
+															<h6>Today Patient</h6>
+															<h3>{{today_patient_count}}</h3>
+														</div>
+													</div>
+												</div>
+												
+												<div class="col-md-12 col-lg-4">
+													<div class="dash-widget">
+														<div class="circle-bar circle-bar3">
+															<div class="circle-graph3" data-percent="{{total_appointments}}">
+																<img src="{% static 'client-assets/img/icon-03.png' %}" class="img-fluid" alt="Patient">
+															</div>
+														</div>
+														<div class="dash-widget-info">
+															<h6>Total Appoinments</h6>
+															<h3>{{total_appointments}}</h3>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12">
+									<h4 class="mb-4">Patient Appoinment</h4>
+									<div class="appointment-tab">
+									
+										<!-- Appointment Tab -->
+										<ul class="nav nav-tabs nav-tabs-solid nav-tabs-rounded">
+											<li class="nav-item">
+												<a class="nav-link active" href="#upcoming-appointments" data-toggle="tab">Upcoming</a>
+											</li>
+											<li class="nav-item">
+												<a class="nav-link" href="#today-appointments" data-toggle="tab">Today</a>
+											</li> 
+											<li class="nav-item">
+												<a class="nav-link" href="#history-appointments" data-toggle="tab">History</a>
+											</li> 
+										</ul>
+										<!-- /Appointment Tab -->
+										
+										<div class="tab-content">
+										
+											<!-- Upcoming Appointment Tab -->
+											<div class="tab-pane show active" id="upcoming-appointments">
+												<div class="card card-table mb-0">
+													<div class="card-body">
+														<div class="table-responsive">
+															<table class="table table-hover table-center mb-0">
+																<thead>
+																	<tr>
+																		<th>Patient Name</th>
+																		<th>Appt Date</th>
+																		<th>Purpose</th>
+																		<th class="text-center">Paid Amount</th>
+																		<th class="text-center">Status</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	{% if upcoming_bookings %}
+																		{% for i in upcoming_bookings %}
+																		<tr>
+																			<td>
+																				<h2 class="table-avatar">
+																					<a class="avatar avatar-sm mr-2" data-toggle="modal" href="#id{{i.id}}" ><img class="avatar-img rounded-circle" src="{{ i.patient.profile_pic.url }}" alt="User Image"></a>
+																					<a data-toggle="modal" href="#id{{i.id}}" >{{i.patient.user.first_name}} <span>#PT00{{i.patient.id}}</span></a>
+																				</h2>
+																			</td>
+																			<td>{{i.date}} <span class="d-block text-info">{{i.timing.start_time}} - {{i.timing.end_time}}</span></td>
+																			<td>General</td>
+																			<td class="text-center">Rs. {{i.invoice.amount}}</td>
+																			<td class="text-center"><span class="badge badge-pill bg-success-light">{{i.status}}</span></td>
+																		</tr>
+																		{% endfor %}
+																	{% else %}
+																	<tr>
+																		<td colspan="6" class="text-center">No upcoming appointments</td>
+																	</tr>
+																	{% endif %}
+																</tbody>
+															</table>		
+														</div>
+													</div>
+												</div>
+											</div>
+											<!-- /Upcoming Appointment Tab -->
+									   
+											<!-- Today Appointment Tab -->
+											<div class="tab-pane" id="today-appointments">
+												<div class="card card-table mb-0">
+													<div class="card-body">
+														<div class="table-responsive">
+															<table class="table table-hover table-center mb-0">
+																<thead>
+																	<tr>
+																		<th>Patient Name</th>
+																		<th>Appt Date</th>
+																		<th>Purpose</th>
+																		<th class="text-center">Paid Amount</th>
+																		<th class="text-center">Status</th>
+																		<th></th>
+																	</tr>
+																</thead>
+																<tbody>
+																	{% if today_bookings %}
+																		{% for i in today_bookings %}
+																		<tr>
+																			<td>
+																				<h2 class="table-avatar">																				
+																					<a class="avatar avatar-sm mr-2" data-toggle="modal" href="#id{{i.id}}" ><img class="avatar-img rounded-circle" src="{{ i.patient.profile_pic.url }}" alt="User Image"></a>
+																					<a data-toggle="modal" href="#id{{i.id}}" >{{i.patient.user.first_name}} <span>#PT00{{i.patient.id}}</span></a>
+																				</h2>
+																			</td>
+																			<td>{{i.date}} <span class="d-block text-info">{{i.timing.start_time}} - {{i.timing.end_time}}</span></td>
+																			<td>General</td>
+																			<td class="text-center">Rs. {{i.invoice.amount}}</td>
+																			<td class="text-center">{{i.status}}</td>
+																			<td class="text-center">
+																				<div class="table-action">
+																					<a href="{% url 'complete-booking' i.id %}" class="btn btn-sm bg-success-light border border-success">
+																						<i class="fas fa-check"></i> 
+																						<span class="{% if booking.status == 'Completed' %}text-secondary{% endif %}">
+																							Complete
+																						</span>
+																					</a>
+																				</div>
+																			</td>
+																		</tr>
+																		{% endfor %}
+																	{% else %}
+																	<tr>
+																		<td colspan="6" class="text-center">No appointments today</td>
+																	</tr>
+																	{% endif %}
+																</tbody>
+															</table>		
+														</div>	
+													</div>	
+												</div>	
+											</div>
+											<!-- /Today Appointment Tab -->
+
+											<!-- History Appointment Tab -->
+											<div class="tab-pane" id="history-appointments">
+												<div class="card card-table mb-0">
+													<div class="card-body">
+														<div class="table-responsive">
+															<table class="table table-hover table-center mb-0">
+																<thead>
+																	<tr>
+																		<th>Patient Name</th>
+																		<th>Appt Date</th>
+																		<th>Purpose</th>
+																		<th class="text-center">Paid Amount</th>
+																		<th class="text-center">Status</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	{% if history_bookings %}
+																		{% for i in history_bookings %}
+																		<tr>
+																			<td>
+																				<h2 class="table-avatar">
+																					<a class="avatar avatar-sm mr-2" data-toggle="modal" href="#id{{i.id}}" ><img class="avatar-img rounded-circle" src="{{ i.patient.profile_pic.url }}" alt="User Image"></a>
+																					<a data-toggle="modal" href="#id{{i.id}}" >{{i.patient.user.first_name}} <span>#PT00{{i.patient.id}}</span></a>
+																				</h2>
+																			</td>
+																			<td>{{i.date}} <span class="d-block text-info">{{i.timing.start_time}} - {{i.timing.end_time}}</span></td>
+																			<td>General</td>
+																			<td class="text-center">Rs. {{i.invoice.amount}}</td>
+																			<td class="text-center">{{i.status}}</td>
+																		</tr>
+																		{% endfor %}
+																	{% else %}
+																	<tr>
+																		<td colspan="6" class="text-center">No history available</td>
+																	</tr>
+																	{% endif %}
+																</tbody>
+															</table>		
+														</div>	
+													</div>	
+												</div>	
+											</div>
+											<!-- /History Appointment Tab -->
+											
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			{% include 'components/footer.html' %}
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+	  
+		<!-- jQuery -->
+		<script src="{% static 'client-assets/js/jquery.min.js' %}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'client-assets/js/popper.min.js' %}"></script>
+		<script src="{% static 'client-assets/js/bootstrap.min.js' %}"></script>
+		
+		<!-- Sticky Sidebar JS -->
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/ResizeSensor.js' %}"></script>
+        <script src="{% static 'client-assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js' %}"></script>
+		
+		<!-- Circle Progress JS -->
+		<script src="{% static 'client-assets/js/circle-progress.min.js' %}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'client-assets/js/script.js' %}"></script>
+
+		{% for i in booking %}
+		<div class="modal fade custom-modal" id="id{{i.id}}">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Patient Profile</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+		
+					<div class="modal-body">
+						<!-- Profile Widget -->
+						<div class="card widget-profile pat-widget-profile">
+							<div class="card-body">
+								<div class="pro-widget-content">
+									<div class="profile-info-widget">
+										<a href="#" class="booking-doc-img">
+											<img src="{{i.patient.profile_pic.url}}" alt="User Image">
+										</a>
+										<div class="profile-det-info">
+											<h3>{{i.patient.user.first_name}}</h3>
+											
+											<div class="patient-details">
+												<h5><b>Patient ID :</b> #PT00{{i.patient.id}}</h5>
+												<h5 class="mb-0"><i class="fas fa-map-marker-alt"></i> {{i.patient.city}}, {{i.patient.country}}</h5>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="patient-info">
+									<ul>
+										<li>Phone <span>{{i.patient.mobile}}</span></li>
+										<li>DOB <span>{{i.patient.dob}}</span></li>
+										<li>Gender <span>{{i.patient.gender.title}}</span></li>
+										<li>Blood Group <span>{{i.patient.blood_group}}</span></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /Profile Widget -->
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+		
+	</body>
+
+<!-- doccure/doctor-dashboard.html  30 Nov 2019 04:12:09 GMT -->
+</html>

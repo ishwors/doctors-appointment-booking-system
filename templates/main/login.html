@@ -1,0 +1,141 @@
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/login.html  30 Nov 2019 04:12:20 GMT -->
+<head>
+	{% load static %}
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="{% static 'client-assets/img/favicon.png' %}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap.min.css' %}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/fontawesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/all.min.css' %}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/style.css' %}">
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="assets/js/html5shiv.min.js"></script>
+			<script src="assets/js/respond.min.js"></script>
+		<![endif]-->
+
+		<!-- To prevent user form pressing back button -->
+		<script>
+			window.onload = function() {
+				if (typeof history.pushState === 'function') {
+					history.pushState(null, null, location.href);
+					window.onpopstate = function () {
+						history.go(1);
+					};
+				} else {
+					window.onhashchange = function () {
+						window.location.hash = 'no-back';
+					};
+				}
+			};
+		</script>
+	
+	</head>
+	<body class="account-page">
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			{% include 'components/header.html' %}
+			<!-- /Header -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container-fluid">
+					
+					<div class="row">
+						<div class="col-md-8 offset-md-2">
+							
+							<!-- Login Tab Content -->
+							<div class="account-content">
+								<div class="row align-items-center justify-content-center">
+									<div class="col-md-7 col-lg-6 login-left">
+										<img src="{% static 'client-assets/img/login-banner.png' %}" class="img-fluid" alt="Doccure Login">	
+									</div>
+									<div class="col-md-12 col-lg-6 login-right">
+										<div class="login-header">
+											<h3>Login <span>Doccure</span></h3>
+										</div>
+
+										<form method="POST" action="{% url 'doLogin' %}">
+											{% csrf_token %}
+											<div class="form-group form-focus">
+												<input type="email" class="form-control floating" name="email" required>
+												<label class="focus-label">Email</label>
+											</div>
+											<div class="form-group form-focus">
+												<input type="password" class="form-control floating" name="password" required>
+												<label class="focus-label">Password</label>
+											</div>
+
+											{% if messages %}
+											<span class="messages">
+												{% for message in messages %}
+													<span {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</span>
+												{% endfor %}
+											</span>
+											{% endif %}
+
+											{% if default_success_message %}
+												<div class="messages">
+													{{ default_success_message }}
+												</div>
+											{% endif %}
+
+											<div class="text-right">
+												<a class="forgot-link" href="{% url 'forgot-password' %}">Forgot Password ?</a>
+											</div>
+											<button class="btn btn-primary btn-block btn-lg login-btn" type="submit">Login</button>
+											<div class="login-or">
+												<span class="or-line"></span>
+											</div>
+											<div class="text-center dont-have">Don’t have an account? <a href="{% url 'register' %}">Register</a></div>
+										</form>
+									</div>
+								</div>
+							</div>
+							<!-- /Login Tab Content -->
+								
+						</div>
+					</div>
+
+				</div>
+
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			{% include 'components/footer.html' %}
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+	  
+		<!-- jQuery -->
+		<script src="{% static 'client-assets/js/jquery.min.js' %}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'client-assets/js/popper.min.js' %}"></script>
+		<script src="{% static 'client-assets/js/bootstrap.min.js' %}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'client-assets/js/script.js' %}"></script>
+		
+	</body>
+
+<!-- doccure/login.html  30 Nov 2019 04:12:20 GMT -->
+</html>

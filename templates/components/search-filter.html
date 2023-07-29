@@ -1,0 +1,33 @@
+{% load static %}
+<script type="text/javascript" src="{% static 'doctor-filter.js' %}"></script>
+
+<div class="card search-filter">
+    <div class="card-header">
+        <h4 class="card-title mb-0">Filter</h4>
+    </div>
+    <div class="card-body">
+        <div class="filter-widget">
+            <h4>Gender</h4>
+            {% for i in gender%}
+            <div>
+                <label class="custom_check">
+                    <input class="filter-checkbox" type="checkbox" data-filter="gender" value="{{i.id}}">
+                    <span class="checkmark"></span> {{i.title}}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="filter-widget">
+            <h4>Select Specialist</h4>
+            {% for i in specialization%}
+            <div>
+                <label class="custom_check">
+                    <input class="filter-checkbox" type="checkbox" data-filter="specialization" value="{{i.id}}">
+                    <span class="checkmark"></span> {{i.title}}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>

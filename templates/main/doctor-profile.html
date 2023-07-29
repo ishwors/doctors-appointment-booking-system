@@ -1,0 +1,568 @@
+<!DOCTYPE html> 
+<html lang="en">
+	
+<!-- doccure/doctor-profile.html  30 Nov 2019 04:12:16 GMT -->
+<head>
+	{%load static %}
+		<meta charset="utf-8">
+		<title>Doccure</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+		
+		<!-- Favicons -->
+		<link href="{% static 'client-assets/img/favicon.png'%}" rel="icon">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/bootstrap.min.css'%}">
+		
+		<!-- Fontawesome CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/fontawesome.min.css'%}">
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fontawesome/css/all.min.css'%}">
+		
+		<!-- Fancybox CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/plugins/fancybox/jquery.fancybox.min.css'%}">
+		
+		<!-- Main CSS -->
+		<link rel="stylesheet" href="{% static 'client-assets/css/style.css'%}">
+
+		<style>
+			.comment-body {
+				width: 1100px;
+			}
+			.comment-content {
+				word-break: break-word;
+			}
+			.time-slot ul {
+				display: flex;
+				justify-content: space-between;
+				list-style: none;
+				padding: 0;
+			}
+		
+			.time-slot ul li {
+				flex-basis: 14%;
+			}
+		</style>
+		
+		<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!--[if lt IE 9]>
+			<script src="{% static 'client-assets/js/html5shiv.min.js'%}"></script>
+			<script src="{% static 'client-assets/js/respond.min.js'%}"></script>
+		<![endif]-->
+	
+	</head>
+	<body>
+
+		<!-- Main Wrapper -->
+		<div class="main-wrapper">
+		
+			<!-- Header -->
+			{% include 'components/header.html' %}
+			<!-- /Header -->
+			
+			<!-- Breadcrumb -->
+			<div class="breadcrumb-bar">
+				<div class="container-fluid">
+					<div class="row align-items-center">
+						<div class="col-md-12 col-12">
+							<nav aria-label="breadcrumb" class="page-breadcrumb">
+								<ol class="breadcrumb">
+									<li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+									<li class="breadcrumb-item active" aria-current="page">Doctor Profile</li>
+								</ol>
+							</nav>
+							<h2 class="breadcrumb-title">Doctor Profile</h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /Breadcrumb -->
+			
+			<!-- Page Content -->
+			<div class="content">
+				<div class="container">
+
+					<!-- Doctor Widget -->
+					<div class="card">
+						<div class="card-body">
+							<div class="doctor-widget">
+								<div class="doc-info-left d-flex align-items-center">
+									<div class="doctor-img">
+										<img src="{{doctor.profile_pic.url}}" class="img-fluid" alt="User Image">
+									</div>
+									<div class="doc-info-cont">
+										<h4 class="doc-name">{{doctor.user.first_name}}</h4>
+										<p class="doc-speciality">{{doctor.degree}} - {{doctor.designation}}</p>
+										<h5 class="doc-department">{{doctor.specialization}}</h5>
+										<div class="rating">
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 1 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 2 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 3 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 4 %}filled{% else %}empty{% endif %}"></i>
+											<i class="fas fa-star {% if aggregated_review.average_rating|floatformat:0|add:0 >= 5 %}filled{% else %}empty{% endif %}"></i>
+											<span class="d-inline-block average-rating">({{ aggregated_review.total_reviews }})</span>
+										</div>
+										<div class="clinic-details">
+											<p class="doc-location"><i class="fas fa-map-marker-alt"></i> {{doctor.address}}</p>
+										</div>
+									</div>
+								</div>
+								<div class="doc-info-right">
+									<div class="clini-infos">
+										<ul>
+											<li><i class="fas fa-building"></i> {{doctor.clinic_name}}</li>
+											<li><i class="fas fa-map-marker-alt"></i> {{doctor.clinic_address}}</li>
+											<li><i class="far fa-money-bill-alt"></i> Rs {{doctor.pricing}} </li>
+										</ul>
+									</div>
+									<div class="clinic-booking">
+										<a class="apt-btn" href="{{doctor.get_booking_url}}">Book Appointment</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- /Doctor Widget -->
+					
+					<!-- Doctor Details Tab -->
+					<div class="card">
+						<div class="card-body pt-0">
+						
+							<!-- Tab Menu -->
+							<nav class="user-tabs mb-4">
+								<ul class="nav nav-tabs nav-tabs-bottom nav-justified">
+									<li class="nav-item">
+										<a class="nav-link active" href="#doc_overview" data-toggle="tab">Overview</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#doc_reviews" data-toggle="tab">Reviews</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#doc_business_hours" data-toggle="tab">Business Hours</a>
+									</li>
+								</ul>
+							</nav>
+							<!-- /Tab Menu -->
+							
+							<!-- Tab Content -->
+							<div class="tab-content pt-0">
+							
+								<!-- Overview Content -->
+								<div role="tabpanel" id="doc_overview" class="tab-pane fade show active">
+									<div class="row">
+										<div class="col-md-12 col-lg-9">
+										
+											<!-- About Details -->
+											<div class="widget about-widget">
+												<h4 class="widget-title">About Me</h4>
+												<p>
+													{{ doctor.bio|linebreaksbr }}
+												</p>
+											</div>
+											<!-- /About Details -->
+										
+											<!-- Education Details -->
+											<div class="widget education-widget">
+												<h4 class="widget-title">Education</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">American Dental Medical University</a>
+																	<div>BDS</div>
+																	<span class="time">1998 - 2003</span>
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">American Dental Medical University</a>
+																	<div>MDS</div>
+																	<span class="time">2003 - 2005</span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Education Details -->
+									
+											<!-- Experience Details -->
+											<div class="widget experience-widget">
+												<h4 class="widget-title">Work & Experience</h4>
+												<div class="experience-box">
+													<ul class="experience-list">
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">Glowing Smiles Family Dental Clinic</a>
+																	<span class="time">2010 - Present (5 years)</span>
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">Comfort Care Dental Clinic</a>
+																	<span class="time">2007 - 2010 (3 years)</span>
+																</div>
+															</div>
+														</li>
+														<li>
+															<div class="experience-user">
+																<div class="before-circle"></div>
+															</div>
+															<div class="experience-content">
+																<div class="timeline-content">
+																	<a href="#/" class="name">Dream Smile Dental Practice</a>
+																	<span class="time">2005 - 2007 (2 years)</span>
+																</div>
+															</div>
+														</li>
+													</ul>
+												</div>
+											</div>
+											<!-- /Experience Details -->
+
+										</div>
+									</div>
+								</div>
+								<!-- /Overview Content -->
+								
+								<!-- Reviews Content -->
+								<div role="tabpanel" id="doc_reviews" class="tab-pane fade">
+								
+									<!-- Review Listing -->
+									<div class="widget review-listing">
+										<ul class="comments-list">
+
+											{% for i in review %}
+											<!-- Comment List -->
+											<li>
+												<div class="comment">
+													{% for u in user %}
+														{% if u.patient.id == i.patient_id %}<img class="avatar avatar-sm rounded-circle" src="{{u.patient.profile_pic.url}}">{% endif %}
+													{% endfor %}
+													<div class="comment-body">
+														<div class="meta-data">
+															{% for u in user %}
+															<span class="comment-author">
+																{% if u.patient.id == i.patient_id %}{{u.first_name}}{% endif %}
+															</span>
+															{% endfor %}
+
+															<div class="review-count rating">
+																<i class="fas fa-star {% if i.rating >= 1 %}filled{% else %}empty{% endif %}"></i>
+																<i class="fas fa-star {% if i.rating >= 2 %}filled{% else %}empty{% endif %}"></i>
+																<i class="fas fa-star {% if i.rating >= 3 %}filled{% else %}empty{% endif %}"></i>
+																<i class="fas fa-star {% if i.rating >= 4 %}filled{% else %}empty{% endif %}"></i>
+																<i class="fas fa-star {% if i.rating >= 5 %}filled{% else %}empty{% endif %}"></i>
+															</div>
+														</div>
+														<p class="comment-content">
+															{{i.review_text}}
+														</p>
+													</div>
+													
+												</div>
+												
+											</li>
+											
+											<!-- /Comment List -->
+											{% endfor %}
+										</ul>
+									</div>
+									<!-- /Review Listing -->
+									
+								
+									<!-- Write Review -->
+									<div class="write-review">
+										<h4>Write a review for <strong>Dr. {{doctor.user.first_name}}</strong></h4>
+										
+										<!-- Write Review Form -->
+										<form action="{{i.doctor.get_profile_url}}" method="POST">
+											{% csrf_token %}
+											
+											<div class="form-group">
+												<label>Review</label>
+												<div class="star-rating">
+													<input id="star-5" type="radio" name="rating" value="5">
+													<label for="star-5" title="5 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-4" type="radio" name="rating" value="4">
+													<label for="star-4" title="4 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-3" type="radio" name="rating" value="3">
+													<label for="star-3" title="3 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-2" type="radio" name="rating" value="2">
+													<label for="star-2" title="2 stars">
+														<i class="active fa fa-star"></i>
+													</label>
+													<input id="star-1" type="radio" name="rating" value="1">
+													<label for="star-1" title="1 star">
+														<i class="active fa fa-star"></i>
+													</label>
+												</div>
+											</div>
+											<div class="form-group">
+												<label>Your review</label>
+												<textarea id="review_desc" maxlength="1000" name="review_text" class="form-control"></textarea>
+											</div>
+											<hr>
+											<div class="submit-section">
+												<button type="submit" class="btn btn-primary submit-btn">Add Review</button>
+											</div>
+										</form>
+										<!-- /Write Review Form -->
+										
+									</div>
+									<!-- /Write Review -->
+						
+								</div>
+								<!-- /Reviews Content -->
+								
+								<!-- Business Hours Content -->
+								<div role="tabpanel" id="doc_business_hours" class="tab-pane fade">
+									<div class="row">
+										<div class="col-md-12">
+											<!-- Schedule Widget -->
+											<div class="card booking-schedule schedule-widget">
+												
+												<!-- Schedule Header -->
+												<div class="schedule-header">
+													<div class="row">
+														<div class="col-md-12">
+														
+															<!-- Day Slot -->
+															<div class="day-slot">
+																<ul>
+																	<li>
+																		<span>Mon</span>
+																	</li>
+																	<li>
+																		<span>Tue</span>
+																	</li>
+																	<li>
+																		<span>Wed</span>
+																	</li>
+																	<li>
+																		<span>Thu</span>
+																	</li>
+																	<li>
+																		<span>Fri</span>
+																	</li>
+																	<li>
+																		<span>Sat</span>
+																	</li>
+																	<li>
+																		<span>Sun</span>
+																	</li>
+
+																</ul>
+															</div>
+															<!-- /Day Slot -->
+															
+														</div>
+													</div>
+												</div>
+												<!-- /Schedule Header -->
+												
+												<!-- Schedule Content -->
+												<div class="schedule-cont">
+													<div class="row">
+														<div class="col-md-12">
+														
+															<!-- Time Slot -->
+															<div class="time-slot">
+																<ul class="clearfix">
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'monday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'tuesday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'wednesday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'thursday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'friday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'saturday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+
+																	<li>
+																		{% for i in schedule %}
+																			{% if i.day == 'sunday'%}
+																			<p class="timing">
+																				<span>{{i.timing.start_time}}</span>-<span>{{i.timing.end_time}}</span>	
+																			</p>																		
+																			{% endif %}
+																		{% endfor %}
+																	</li>
+																</ul>
+															</div>
+															<!-- /Time Slot -->
+															
+														</div>
+													</div>
+												</div>
+												<!-- /Schedule Content -->
+												
+											</div>
+											<!-- /Schedule Widget -->
+										</div>
+									</div>
+								</div>
+								<!-- /Doctor Details Tab -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>		
+			<!-- /Page Content -->
+   
+			<!-- Footer -->
+			{% include 'components/footer.html' %}
+			<!-- /Footer -->
+		   
+		</div>
+		<!-- /Main Wrapper -->
+		
+		<!-- Voice Call Modal -->
+		<div class="modal fade call-modal" id="voice_call">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+						<!-- Outgoing Call -->
+						<div class="call-box incoming-box">
+							<div class="call-wrapper">
+								<div class="call-inner">
+									<div class="call-user">
+										<img alt="User Image" src="{% static 'client-assets/img/doctors/doctor-thumb-02.jpg'%}" class="call-avatar">
+										<h4>Dr. Darren Elder</h4>
+										<span>Connecting...</span>
+									</div>							
+									<div class="call-items">
+										<a href="javascript:void(0);" class="btn call-item call-end" data-dismiss="modal" aria-label="Close"><i class="material-icons">call_end</i></a>
+										<a href="voice-call.html" class="btn call-item call-start"><i class="material-icons">call</i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Outgoing Call -->
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /Voice Call Modal -->
+		
+		<!-- Video Call Modal -->
+		<div class="modal fade call-modal" id="video_call">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<div class="modal-body">
+					
+						<!-- Incoming Call -->
+						<div class="call-box incoming-box">
+							<div class="call-wrapper">
+								<div class="call-inner">
+									<div class="call-user">
+										<img class="call-avatar" src="{% static 'client-assets/img/doctors/doctor-thumb-02.jpg'%}" alt="User Image">
+										<h4>Dr. Darren Elder</h4>
+										<span>Calling ...</span>
+									</div>							
+									<div class="call-items">
+										<a href="javascript:void(0);" class="btn call-item call-end" data-dismiss="modal" aria-label="Close"><i class="material-icons">call_end</i></a>
+										<a href="video-call.html" class="btn call-item call-start"><i class="material-icons">videocam</i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /Incoming Call -->
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Video Call Modal -->
+		
+		<!-- jQuery -->
+		<script src="{% static 'client-assets/js/jquery.min.js'%}"></script>
+		
+		<!-- Bootstrap Core JS -->
+		<script src="{% static 'client-assets/js/popper.min.js'%}"></script>
+		<script src="{% static 'client-assets/js/bootstrap.min.js'%}"></script>
+		
+		<!-- Fancybox JS -->
+		<script src="{% static 'client-assets/plugins/fancybox/jquery.fancybox.min.js'%}"></script>
+		
+		<!-- Custom JS -->
+		<script src="{% static 'client-assets/js/script.js'%}"></script>
+		
+	</body>
+
+<!-- doccure/doctor-profile.html  30 Nov 2019 04:12:16 GMT -->
+</html>

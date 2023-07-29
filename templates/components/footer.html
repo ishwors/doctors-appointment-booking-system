@@ -1,0 +1,99 @@
+{% load static %}
+<footer class="footer">
+				
+    <!-- Footer Top -->
+    <div class="footer-top">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                
+                    <!-- Footer Widget -->
+                    <div class="footer-widget footer-about">
+                        <div class="footer-logo">
+                            <img src="{% static 'client-assets/img/footer-logo.png' %}" class="img-fluid" alt="logo">
+                        </div>
+                        <div class="footer-about-content">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
+                            <div class="social-icon">
+                                <ul>
+                                    <li>
+                                        <a href="#"><i class="fab fa-facebook-f"></i> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fab fa-twitter"></i> </a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="fab fa-instagram"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /Footer Widget -->
+                    
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                
+                    <!-- Footer Widget -->
+                    <div class="footer-widget footer-menu">
+                        <h2 class="footer-title">For Patients</h2>
+                        <ul>
+                            <li><a href="{% url 'search' %}"><i class="fas fa-angle-double-right"></i> Search for Doctors</a></li>
+                            <li><a href="{% url 'login' %}"><i class="fas fa-angle-double-right"></i> Login</a></li>
+                            <li><a href="{% url 'register' %}"><i class="fas fa-angle-double-right"></i> Register</a></li>
+                            <li><a href="{% url 'patient-dashboard' %}"><i class="fas fa-angle-double-right"></i> Patient Dashboard</a></li>
+                        </ul>
+                    </div>
+                    <!-- /Footer Widget -->
+                    
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                
+                    <!-- Footer Widget -->
+                    <div class="footer-widget footer-menu">
+                        <h2 class="footer-title">For Doctors</h2>
+                        <ul>
+                            <li><a href="{% url 'login' %}"><i class="fas fa-angle-double-right"></i> Login</a></li>
+                            <li><a href="{% url 'doctor-register' %}"><i class="fas fa-angle-double-right"></i> Register</a></li>
+                            <li><a href="{% url 'doctor-dashboard' %}"><i class="fas fa-angle-double-right"></i> Doctor Dashboard</a></li>
+                        </ul>
+                    </div>
+                    <!-- /Footer Widget -->
+                    
+                </div>
+                
+                <div class="col-lg-3 col-md-6">
+                
+                    <!-- Footer Widget -->
+                    <div class="footer-widget footer-contact">
+                        <h2 class="footer-title">Contact Us</h2>
+                        <div class="footer-contact-info">
+                            <div class="footer-address">
+                                <span><i class="fas fa-map-marker-alt"></i></span>
+                                <p> Devkota Sadak, Kathmandu <br> Nepal, KTM 12345 </p>
+                            </div>
+                            <p>
+                                <i class="fas fa-phone-alt"></i>
+                                +977 1234567890
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-envelope"></i>
+                                docconnect@example.com
+                            </p>
+                        </div>
+                    </div>
+                    <!-- /Footer Widget -->
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <!-- /Footer Top -->
+     
+</footer>
