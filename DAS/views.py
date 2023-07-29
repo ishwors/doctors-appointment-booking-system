@@ -353,6 +353,10 @@ def PATIENT_DASHBOARD(request):
         user_id = request.user.id
         user = User.objects.get(id=user_id)
         patient_id = user.patient.id
+        doctors = Doctor.objects.all().order_by('id')
+
+        for doctor in doctors:
+            doctor.aggregated_review = doctor.review_set.aggregate(average_rating=Avg('rating'), total_reviews=Count('rating'))
 
         booking_filter = Booking.objects.filter(patient_id=patient_id, status__in=['Confirmed']).order_by('-date')
         invoice_filter = Invoice.objects.filter(patient_id=patient_id).order_by('-issued_on')
@@ -362,6 +366,7 @@ def PATIENT_DASHBOARD(request):
             'booking': booking_filter,
             'invoice': invoice_filter,
             'history': history_filter,
+            'doctor': doctors,
         }
         return render(request,'main/patient-dashboard.html', context)
     return redirect('login')

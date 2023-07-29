@@ -2481,7 +2481,7 @@ html.menu-opened body {
     background-color: #fff;
     border: 1px solid #f0f0f0;
     border-radius:4px;
-    margin-bottom:30px;
+    /* margin-bottom:30px; */
     position:relative;
     -webkit-transition:all .3s ease 0s;
     -moz-transition:all .3s ease 0s;
