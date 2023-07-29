@@ -19,7 +19,7 @@ Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
 
 ### Project Deliverables
 
-- Open [Project Report](https://drive.google.com/file/d/1fr6yCBkrmibikMkRG0krLAXEp0CvXIYy/view?usp=sharing)
-- Open [Diagrams](https://drive.google.com/file/d/1xLhBXS12bCE9kTBOAaEcHP_Gz5LLP7ie/view?usp=sharing)
+- Open [Project Report](https://drive.google.com/file/d/1IiZMkhaAK6W9tDrexonJt-115nJvRaeM/view?usp=sharing)
+- Open [Diagrams](https://drive.google.com/file/d/101mvpcB1AZMSrv_cljTADa14Ikx7WbCO/view?usp=sharing)
 - Open [Presentation Slides](https://www.canva.com/design/DAFpWS-QAxE/uidgwogwEyJSrSqoK_H5lA/edit?utm_content=DAFpWS-QAxE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 - Open [Demo Video](https://drive.google.com/file/d/1_F4kCB2bNX3OKrDGnj5aYKfJ0yHtTASg/view?usp=sharing)
