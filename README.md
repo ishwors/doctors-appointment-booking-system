@@ -21,6 +21,6 @@ Open [http://localhost:8000](http://localhost:8000) to view it in the browser.
 
 
 ### Project Docs & Presentation
-Open [Project Report](https://drive.google.com/file/d/1rY3b3CCqP5HCc-b_3ExxgmFJPEN3RSUL/view?usp=sharing) [only with apex mail]
-
-Open [Project Slide](https://www.canva.com/design/DAFpWS-QAxE/uidgwogwEyJSrSqoK_H5lA/edit?utm_content=DAFpWS-QAxE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+Open [Project Report](https://drive.google.com/file/d/1ficL9QrlwEVtG8RgWwDDB4Cfbh8HiOBB/view?usp=sharing) 
+Open [Diagrams](https://drive.google.com/file/d/1acYSLtK4VUqnKaXNzqfwwYdwkHiah7HF/view?usp=sharing)
+Open [Presentation Slides](https://www.canva.com/design/DAFpWS-QAxE/uidgwogwEyJSrSqoK_H5lA/edit?utm_content=DAFpWS-QAxE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
